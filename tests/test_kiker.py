@@ -117,7 +117,7 @@ class KikerTests(unittest.TestCase):
         document = read_document(source_file(self.directory))
         refusal = {"issues": [issue(sources=["S001"])]}
         reviewer = Responses({"requirements": [], "issues": []}, refusal, refusal, refusal)
-        with self.assertRaisesRegex(ModelError, "два разных источника"):
+        with self.assertRaisesRegex(ModelError, "двух разных источников"):
             review(document, reviewer, lambda _: None)
 
     def test_report_uses_source_quotes_and_consistent_counts(self):
