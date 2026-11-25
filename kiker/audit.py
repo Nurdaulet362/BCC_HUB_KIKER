@@ -6,6 +6,7 @@ from typing import Callable, Iterable, Protocol
 
 from jsonschema import Draft202012Validator
 
+from .acceptance import matches_expense_exclusion
 from .config import ModelError
 from .source import Block, Document
 
@@ -91,6 +92,9 @@ VERIFY = """Ты проверяешь черновые замечания к Т�
 корректного интервала задан CSV с фиксированными колонками и только подходящими
 строками, интервал без совпадений даёт CSV с колонками и без строк данных.
 Отсутствие специальной обработки этого случая не является пробелом.
+В критерии приёмки отдельно сверь исходное состояние, действие и ожидаемый
+эффект. Проверка исключённой операции согласована с правилом, если после неё
+показатель не изменился. Само выполнение такой операции в тесте допустимо.
 Опирайся прежде всего на цитируемые фрагменты и восстанови сценарий сам.
 Для каждой подтверждённой записи укажи ID черновика и в impact опиши конкретный
 сценарий и обязательный результат, на который влияет дефект. Одну причину
@@ -272,6 +276,19 @@ def _grounded_design_detail(finding: Finding, source: dict[str, Block]) -> bool:
     return True
 
 
+def _matches_acceptance_rule(finding: Finding, source: dict[str, Block]) -> bool:
+    if finding.kind != "conflict" or len(finding.sources) != 2:
+        return False
+    first, second = (source[ref] for ref in finding.sources)
+    if _matches_section(first, ACCEPTANCE_SECTION):
+        first, second = second, first
+    return (
+        _matches_section(second, ACCEPTANCE_SECTION)
+        and not _matches_section(first, ACCEPTANCE_SECTION)
+        and matches_expense_exclusion(first.text, second.text)
+    )
+
+
 def _findings(items: list[dict], scope: str) -> Iterable[Finding]:
     for item in items:
         severity = item["severity"]
@@ -328,6 +345,8 @@ SET_PASSES = (
         "Сверка критериев приёмки",
         """Проверь каждую строку критериев приёмки по всем связанным правилам ТЗ.
 Вычисли ожидаемый исход на данных, явно заданных в строке, и сравни его с заявленным.
+Исключённое из расчёта действие допустимо в тесте. Сравни сумму до и после:
+неизменный счётчик подтверждает правило исключения.
 Если даты события и обработки попадают в разные периоды, проверь, какую дату
 правило использует и какой период назван в ожидаемом результате.
 Если исходы различаются, верни conflict с ID правила и строки приёмки. Для
@@ -385,7 +404,7 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
     source = {block.id: block for block in scope}
     unique = {}
     for item in sorted(findings, key=lambda finding: (rank[finding.severity], finding.sources)):
-        if _grounded_design_detail(item, source):
+        if _grounded_design_detail(item, source) and not _matches_acceptance_rule(item, source):
             unique.setdefault((item.kind, item.sources), item)
     confirmed = ()
     if unique:

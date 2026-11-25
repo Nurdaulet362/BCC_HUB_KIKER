@@ -11,6 +11,7 @@ from pypdf.generic import (
     NameObject,
 )
 
+from kiker.acceptance import matches_expense_exclusion
 from kiker.audit import Audit, Finding, review
 from kiker.gemini import Gemini
 from kiker.ollama import FormatUnavailable, Ollama, Settings
@@ -186,6 +187,42 @@ class KikerTests(unittest.TestCase):
         )
         result = review(document, reviewer, lambda _: None)
         self.assertEqual([finding.sources for finding in result.findings], [("S002",)])
+
+    def test_excluded_operation_checks_the_expected_counter(self):
+        rule = "В расходы входят покупки. Переводы и снятие наличных исключаются."
+        for action in ("Перевести 300 ₸", "Снять 300 ₸ наличными"):
+            for expected, matches in (("12 600 ₸", True), ("12 900 ₸", False)):
+                with self.subTest(action=action, expected=expected):
+                    row = f"| Расходы 12\u202f600 ₸, порог 15 000 ₸ | {action} | Счётчик показывает {expected} |"
+                    self.assertEqual(matches_expense_exclusion(rule, row), matches)
+
+        row = "| Расходы 12 600 ₸ | Перевести 300 ₸ | Счётчик показывает 12 600 ₸ |"
+        for other_rule in (
+            "В расходы входят покупки. Переводы не исключаются.",
+            "В расходы входят покупки. Переводы исключаются при отмене.",
+            "В бонусы входят покупки. Переводы исключаются.",
+        ):
+            with self.subTest(rule=other_rule):
+                self.assertFalse(matches_expense_exclusion(other_rule, row))
+
+    def test_reports_only_the_acceptance_row_with_an_incorrect_total(self):
+        document = read_document(source_file(
+            self.directory,
+            "# Учёт расходов\n\n"
+            "REQ-1. В расходы входят покупки. Переводы исключаются.\n\n"
+            "## Критерии приёмки\n\n"
+            "| Расходы 12 600 ₸ | Перевести 300 ₸ | Счётчик показывает 12 600 ₸ |\n"
+            "| Расходы 12 600 ₸ | Перевести 300 ₸ | Счётчик показывает 12 900 ₸ |\n",
+        ))
+        reviewer = Responses(
+            {"requirements": ["S001"], "issues": []},
+            {"issues": []}, {"issues": []},
+            {"issues": [issue(sources=["S001", "S002"]), issue(sources=["S001", "S003"])]},
+            {"issues": []},
+            {"confirmed": [{"id": "C001", "impact": "Ожидаемый счётчик включает исключённую операцию."}]},
+        )
+        result = review(document, reviewer, lambda _: None)
+        self.assertEqual([finding.sources for finding in result.findings], [("S001", "S003")])
 
     def test_schema_fallback_keeps_the_same_contract(self):
         client = Ollama(Settings("http://127.0.0.1:11434", "test", 4096, 30))
