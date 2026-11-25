@@ -503,7 +503,9 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
     checked_periods = _check_expense_periods(scope)
     unique = {}
     for item in sorted(findings, key=lambda finding: (rank[finding.severity], finding.sources)):
-        if item.sources in checked_periods or not _grounded_design_detail(item, source):
+        mentioned = set(re.findall(r"\bS\d{3,}\b", item.description + " " + item.question))
+        referenced = set(item.sources) | (mentioned & source.keys())
+        if any(referenced == set(pair) for pair in checked_periods) or not _grounded_design_detail(item, source):
             continue
         if not _matches_acceptance_rule(item, source):
             unique.setdefault((item.kind, item.sources), item)

@@ -347,6 +347,21 @@ class KikerTests(unittest.TestCase):
         self.assertIn('S001, S002', confirmation)
         self.assertEqual(len(audit.findings), 1)
 
+    def test_period_conflict_is_not_repeated_as_local_ambiguity(self):
+        document = read_document(source_file(self.directory,
+            '# Расходы\n\nREQ-1. Месяц определяется по дате совершения покупки.\n\n'
+            '## Приёмка\n\n'
+            '| Покупка 30 апреля на 500 ₸ | Провести 1 мая | Майский счётчик вырос на 500 ₸ |\n'))
+        duplicate = {**issue('ambiguous', ['S001']),
+            'description': 'Правило S001 выбирает дату покупки, но пример S002 увеличивает другой месяц.'}
+        reviewer = Responses(
+            {'requirements': ['S001'], 'issues': [duplicate]},
+            {'issues': []}, {'issues': []}, {'issues': []}, {'issues': []},
+        )
+        audit = review(document, reviewer, lambda _: None)
+        self.assertEqual([(f.kind, f.sources) for f in audit.findings],
+                         [('conflict', ('S001', 'S002'))])
+
     def test_schema_fallback_keeps_the_same_contract(self):
         client = Ollama(Settings("http://127.0.0.1:11434", "test", 4096, 30))
         reply = {"message": {"content": '```json\n{"issues":[]}\n```'}}
