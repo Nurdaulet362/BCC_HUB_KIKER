@@ -11,7 +11,9 @@ import tempfile
 import time
 
 from .audit import review
-from .ollama import ModelError, Ollama, Settings
+from .config import ModelError, environment
+from .gemini import Gemini
+from .ollama import Ollama, Settings
 from .report import Run, render
 from .source import read_document
 
@@ -52,7 +54,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="KIKER · проверка требований до разработки")
     parser.add_argument("input", type=Path, help="входной файл Markdown или PDF")
     parser.add_argument("output", type=Path, help="путь к Markdown-отчёту")
-    parser.add_argument("--model", help="модель Ollama, переопределяет KIKER_MODEL")
+    parser.add_argument("--model", help="модель выбранного провайдера, переопределяет KIKER_MODEL")
     args = parser.parse_args()
 
     try:
@@ -63,15 +65,23 @@ def main() -> int:
         if args.output.suffix.lower() not in {".md", ".markdown"}:
             raise ValueError("Укажите путь к отчёту с расширением .md или .markdown.")
         document = read_document(args.input)
-        settings = Settings.load(args.model)
-        client = Ollama(settings)
         start = time.monotonic()
-        digest = client.model_digest()
+        match environment().get("KIKER_PROVIDER", "gemini"):
+            case "gemini":
+                client = Gemini(args.model)
+                provider, model, digest = "Gemini API", client.model, None
+            case "ollama":
+                settings = Settings.load(args.model)
+                client = Ollama(settings)
+                provider, model, digest = "Ollama", settings.model, client.model_digest()
+            case _:
+                raise ModelError("KIKER_PROVIDER должен быть gemini или ollama.")
         print(f"Документ · {document.title} · фрагментов {len(document.blocks)}", file=sys.stderr, flush=True)
         audit = review(document, client, lambda step: print(step, file=sys.stderr, flush=True))
         run = Run(
-            datetime.now().astimezone(), _version(), settings.model, digest,
+            datetime.now().astimezone(), _version(), model, digest,
             time.monotonic() - start, client.calls, client.input_tokens, client.output_tokens,
+            provider=provider, model_version=client.version if isinstance(client, Gemini) else None,
         )
         _write_report(args.output, render(document, audit, run))
         print(f"Отчёт · {args.output} · требований {len(audit.requirements)} · замечаний {len(audit.findings)}")

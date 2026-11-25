@@ -2,35 +2,17 @@
 
 import json
 from dataclasses import dataclass
-import os
-from pathlib import Path
 import re
 import time
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
-
-class ModelError(RuntimeError):
-    """The model service could not complete a review."""
+from .config import ModelError, environment
 
 
 class FormatUnavailable(ModelError):
     """The selected runner does not implement native schema constraints."""
-
-
-def _dotenv(path: Path) -> dict[str, str]:
-    if not path.is_file():
-        return {}
-    entries = {}
-    for line in path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        name, separator, value = line.partition("=")
-        if separator:
-            entries[name.strip()] = value.strip().strip("\"'")
-    return entries
 
 
 @dataclass(frozen=True)
@@ -42,7 +24,7 @@ class Settings:
 
     @classmethod
     def load(cls, model: str | None = None) -> "Settings":
-        values = _dotenv(Path(".env")) | os.environ
+        values = environment()
         base_url = values.get("OLLAMA_URL", "http://127.0.0.1:11434").rstrip("/")
         url = urlsplit(base_url)
         if url.scheme not in {"http", "https"} or not url.hostname or url.username or url.query or url.fragment:

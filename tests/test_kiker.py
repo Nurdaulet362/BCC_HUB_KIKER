@@ -12,6 +12,7 @@ from pypdf.generic import (
 )
 
 from kiker.audit import Audit, Finding, review
+from kiker.gemini import Gemini
 from kiker.ollama import FormatUnavailable, Ollama, Settings
 from kiker.report import Run, render
 from kiker.source import DocumentError, read_document
@@ -134,6 +135,25 @@ class KikerTests(unittest.TestCase):
         self.assertNotIn("format", requests[1])
         self.assertNotIn("format", requests[2])
         self.assertIn('{"type":"object"}', requests[1]["messages"][0]["content"])
+
+    def test_gemini_structured_request_and_usage(self):
+        with unittest.mock.patch("kiker.gemini.environment", return_value={"GEMINI_API_KEY": "test"}):
+            client = Gemini()
+        client._generate = Mock(return_value={
+            "modelVersion": "version-test",
+            "usageMetadata": {"promptTokenCount": 19, "candidatesTokenCount": 7, "thoughtsTokenCount": 3},
+            "candidates": [{
+                "finishReason": "STOP",
+                "content": {"parts": [{"text": "private reasoning", "thought": True}, {"text": '{"issues":[]}'}]},
+            }],
+        })
+        schema = {"type": "array", "uniqueItems": True, "items": {"type": "string"}}
+        self.assertEqual(client.chat("role", "input", schema, 250), {"issues": []})
+        payload = client._generate.call_args.args[0]
+        self.assertEqual(payload["systemInstruction"]["parts"], [{"text": "role"}])
+        self.assertEqual(payload["generationConfig"]["responseMimeType"], "application/json")
+        self.assertNotIn("uniqueItems", payload["generationConfig"]["responseJsonSchema"])
+        self.assertEqual((client.calls, client.input_tokens, client.output_tokens), (1, 19, 10))
 
     def test_report_uses_source_quotes_and_consistent_counts(self):
         document = read_document(source_file(self.directory))

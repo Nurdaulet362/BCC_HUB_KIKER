@@ -20,6 +20,8 @@ class Run:
     requests: int
     input_tokens: int
     output_tokens: int
+    provider: str = "Ollama"
+    model_version: str | None = None
 
 
 def _text(value: str) -> str:
@@ -63,6 +65,8 @@ def render(document: Document, audit: Audit, run: Run) -> str:
     model_title = _text(run.model)
     if run.digest:
         model_title += f" · `{run.digest[:12]}`"
+    if run.model_version and run.model_version != run.model:
+        model_title += f" · {_text(run.model_version)}"
     report = [
         f"# Ревью ТЗ · {_text(document.title)}",
         "",
@@ -70,7 +74,7 @@ def render(document: Document, audit: Audit, run: Run) -> str:
         "",
         f"- Входной файл — {_text(document.name)}.",
         f"- Дата и время — {run.date.isoformat(timespec='seconds')}.",
-        f"- Модель — {model_title}, Ollama.",
+        f"- Модель — {model_title}, {run.provider}.",
         f"- Версия агента — `{run.version}`.",
         f"- Время — {run.seconds:.1f} с. Запросов — {run.requests}. "
         f"Токенов — {run.input_tokens} входных и {run.output_tokens} выходных.",

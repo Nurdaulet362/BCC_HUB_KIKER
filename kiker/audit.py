@@ -6,7 +6,7 @@ from typing import Callable, Iterable, Protocol
 
 from jsonschema import Draft202012Validator
 
-from .ollama import ModelError
+from .config import ModelError
 from .source import Block, Document
 
 
