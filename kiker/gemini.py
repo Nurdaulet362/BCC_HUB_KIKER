@@ -66,6 +66,25 @@ class Gemini:
                         raise ModelError("Gemini вернул нечитаемый ответ.")
                     return result
             except HTTPError as error:
+                if error.code == 429:
+                    try:
+                        details = json.load(error).get("error", {}).get("details", [])
+                    except (ValueError, AttributeError):
+                        details = []
+                    finally:
+                        error.close()
+                    if not isinstance(details, list):
+                        details = []
+                    daily = any(
+                        "PerDay" in violation.get("quotaId", "")
+                        for detail in details if isinstance(detail, dict)
+                        for violation in detail.get("violations", []) if isinstance(violation, dict)
+                    )
+                    if daily:
+                        raise ModelError(
+                            f"Исчерпан дневной лимит Gemini для {self.model}. "
+                            "Дождитесь сброса квоты или выберите доступную модель через --model."
+                        ) from error
                 if error.code in {429, 500, 502, 503, 504} and attempt < 3:
                     retry_after = error.headers.get("Retry-After", "")
                     delay = min(60, int(retry_after)) if retry_after.isdigit() else (

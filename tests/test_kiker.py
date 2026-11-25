@@ -1,5 +1,6 @@
 import tempfile
 import hashlib
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 import unittest
@@ -358,6 +359,16 @@ class KikerTests(unittest.TestCase):
             ):
                 with self.assertRaisesRegex(RuntimeError, 'KIKER_REQUEST_INTERVAL'):
                     Gemini()
+
+    def test_gemini_does_not_retry_an_exhausted_daily_quota(self):
+        with unittest.mock.patch('kiker.gemini.environment', return_value={'GEMINI_API_KEY': 'test'}):
+            client = Gemini()
+        body = {'error': {'details': [{'violations': [{'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier'}]}]}}
+        limited = HTTPError('https://example.test', 429, 'quota', {}, BytesIO(json.dumps(body).encode()))
+        with unittest.mock.patch('kiker.gemini.urlopen', side_effect=limited) as request:
+            with self.assertRaisesRegex(RuntimeError, 'дневной лимит'):
+                client._generate({})
+        self.assertEqual(request.call_count, 1)
 
     def test_report_uses_source_quotes_and_consistent_counts(self):
         document = read_document(source_file(self.directory))
