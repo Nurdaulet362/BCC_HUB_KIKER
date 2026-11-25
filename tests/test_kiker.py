@@ -12,7 +12,7 @@ from pypdf.generic import (
 )
 
 from kiker.audit import Audit, Finding, review
-from kiker.ollama import FormatUnavailable, ModelError, Ollama, Settings
+from kiker.ollama import FormatUnavailable, Ollama, Settings
 from kiker.report import Run, render
 from kiker.source import DocumentError, read_document
 
@@ -101,25 +101,26 @@ class KikerTests(unittest.TestCase):
         with self.assertRaises(DocumentError):
             read_document(source_file(self.directory, "# Заголовок\n\n---\n"))
 
-    def test_retries_unknown_id_and_retains_explicit_ids(self):
+    def test_omits_unknown_id_and_retains_explicit_ids(self):
         document = read_document(source_file(self.directory))
         reviewer = Responses(
             {"requirements": ["S001"], "issues": []},
-            {"issues": [issue(sources=["S001", "S999"])]},
-            {"issues": [issue()]},
+            {"issues": [issue(sources=["S001", "S999"]), issue()]},
             {"issues": [issue(sources=["S002", "S001"])]},
         )
         audit = review(document, reviewer, lambda _: None)
         self.assertEqual([item.original_id for item in audit.requirements], ["R-17", "R-19"])
         self.assertEqual(len(audit.findings), 1)
         self.assertEqual(audit.findings[0].sources, ("S001", "S002"))
+        self.assertEqual(audit.rejected, 1)
 
     def test_single_citation_conflict_never_reaches_report(self):
         document = read_document(source_file(self.directory))
         refusal = {"issues": [issue(sources=["S001"])]}
-        reviewer = Responses({"requirements": [], "issues": []}, refusal, refusal, refusal)
-        with self.assertRaisesRegex(ModelError, "двух разных источников"):
-            review(document, reviewer, lambda _: None)
+        reviewer = Responses({"requirements": [], "issues": []}, refusal, {"issues": []})
+        result = review(document, reviewer, lambda _: None)
+        self.assertEqual(result.findings, ())
+        self.assertEqual(result.rejected, 1)
 
     def test_schema_fallback_keeps_the_same_contract(self):
         client = Ollama(Settings("http://127.0.0.1:11434", "test", 4096, 30))

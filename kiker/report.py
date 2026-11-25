@@ -78,6 +78,8 @@ def render(document: Document, audit: Audit, run: Run) -> str:
     if document.empty_pages:
         pages = ", ".join(map(str, document.empty_pages))
         report.append(f"- Страницы без извлечённого текста — {pages}. Полнота проверки ограничена.")
+    if audit.rejected:
+        report.append(f"- Исключено записей модели, не прошедших проверку схемы и ссылок — {audit.rejected}.")
     report += ["", "## Сводка и готовность", ""]
 
     if not audit.requirements or document.empty_pages:
@@ -86,6 +88,8 @@ def render(document: Document, audit: Audit, run: Run) -> str:
         verdict = "Ключевые сценарии требуют уточнения перед реализацией и приёмкой."
     elif totals["major"]:
         verdict = "Перед реализацией затронутых сценариев согласуйте существенные замечания."
+    elif audit.rejected:
+        verdict = "Часть выводов модели исключена. Перед разработкой сверьте документ с аналитиком."
     else:
         verdict = "Модель не выявила блокирующих или существенных замечаний. ТЗ готово к ручному согласованию перед разработкой."
     report += [
