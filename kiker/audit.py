@@ -43,6 +43,8 @@ SYSTEM = """Ты системный аналитик. Проводи стати�
 Используй только факты из исходника. Пиши на русском. Возвращай только JSON по схеме.
 Каждое замечание описывает конкретный наблюдаемый сценарий или недостающее правило.
 Задай один предметный вопрос владельцу ТЗ, ответ на который позволит исправить дефект.
+Вопрос должен быть законченным предложением со знаком вопроса в конце. Пересказывай
+примеры JSON, команды и фрагменты кода в вопросах обычными словами.
 Коды видов: ambiguous — две трактовки, unverifiable — нет наблюдаемого критерия,
 conflict — несовместимые правила, gap — отсутствующее обязательное правило,
 prescriptive — необоснованное проектное решение, compound — независимые правила в одном пункте.
@@ -92,7 +94,7 @@ def _schema(blocks: list[Block], local: bool) -> dict:
             "maxItems": 1 if local else 4, "uniqueItems": True,
         },
         "description": {"type": "string", "minLength": 8, "maxLength": 720},
-        "question": {"type": "string", "minLength": 8, "maxLength": 400},
+        "question": {"type": "string", "minLength": 8, "maxLength": 400, "pattern": r"\?\s*$"},
     }
     issue = _object(issue_properties)
     if not local and len(blocks) >= 2:
@@ -180,9 +182,12 @@ def _ask(reviewer: Reviewer, instruction: str, blocks: list[Block], *, local: bo
 
 def _findings(items: list[dict], scope: str) -> Iterable[Finding]:
     for item in items:
+        severity = item["severity"]
+        if scope == "Сверка критериев приёмки" and item["kind"] == "conflict":
+            severity = "critical"
         yield Finding(
             kind=item["kind"],
-            severity=item["severity"],
+            severity=severity,
             description=" ".join(item["description"].split()),
             question=" ".join(item["question"].split()),
             sources=tuple(sorted(item["sources"])),
@@ -209,7 +214,8 @@ SET_PASSES = (
         """Найди до 7 наиболее важных расхождений бизнес-правил и поведения.
 Сверь ограничения частоты с исключениями и изменениями настройки.
 Если максимальная частота и исключение применимы одновременно, покажи один сценарий
-с уже выполненным действием, изменением настройки и повторным событием.
+с уже выполненным действием, изменением настройки и следующим событием,
+которое удовлетворяет условию исключения. Проверь оба правила на этом сценарии.
 Свяжи правила, касающиеся одного объекта, даже если они в разных разделах.
 В этом проходе сверяй само поведение. Таблицы приёмки и детали HTTP проверяются отдельно.
 Для конфликта назови сценарий, в котором два процитированных правила дают разные результаты.
