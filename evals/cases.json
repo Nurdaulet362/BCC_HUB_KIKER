@@ -1,0 +1,54 @@
+[
+  {
+    "id": "january-conflict",
+    "conflicts": [
+      [
+        "REQ-1",
+        "Покупка 31 января"
+      ]
+    ]
+  },
+  {
+    "id": "january-corrected",
+    "conflicts": []
+  },
+  {
+    "id": "posting-month",
+    "conflicts": []
+  },
+  {
+    "id": "transfer-conflict",
+    "conflicts": [
+      [
+        "REQ-1",
+        "| Расходы 19 900"
+      ]
+    ]
+  },
+  {
+    "id": "paraphrased-conflict",
+    "conflicts": [
+      [
+        "REQ-1",
+        "| Товар оплачен"
+      ]
+    ]
+  },
+  {
+    "id": "clean-export",
+    "conflicts": []
+  },
+  {
+    "id": "clean-receipt",
+    "conflicts": []
+  },
+  {
+    "id": "idempotency-conflict",
+    "conflicts": [
+      [
+        "REQ-1",
+        "REQ-2"
+      ]
+    ]
+  }
+]

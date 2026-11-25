@@ -30,6 +30,9 @@ cp .env.example .env
 | `GEMINI_API_KEY` | задаётся локально | Ключ Gemini Developer API |
 | `KIKER_MODEL` | `gemini-3.5-flash-lite` | Модель выбранного провайдера |
 | `KIKER_TIMEOUT` | `90` | Таймаут HTTP-запроса к Gemini в секундах |
+| `KIKER_REQUEST_INTERVAL` | `6` | Минимальный интервал между началами запросов Gemini в одном процессе |
+
+Gemini 3.5 Flash-Lite используется с уровнем рассуждения MEDIUM. Запускайте массовую проверку последовательно, учитывая общую квоту проекта Google. При HTTP 429 агент делает до трёх повторов с паузой. Фактические лимиты зависят от аккаунта. [Лимиты Gemini](https://aistudio.google.com/docs/rate-limits) · [Уровни рассуждения](https://aistudio.google.com/docs/thinking)
 
 Для локального прогона через Ollama запустите `ollama serve`, загрузите модель командой `ollama pull qwen3.5:4b` и задайте `KIKER_PROVIDER=ollama`, `KIKER_MODEL=qwen3.5:4b` и `KIKER_TIMEOUT=300` в `.env`. Адрес Ollama по умолчанию — `http://127.0.0.1:11434`. Его можно изменить через `OLLAMA_URL`, а размер контекста через `KIKER_CONTEXT`.
 
@@ -54,4 +57,10 @@ PDF должен содержать текстовый слой. Для скан
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-Входное ТЗ, отчёт Gemini и видео доступны в [комплекте для жюри](https://github.com/Nurdaulet362/BCC_HUB_KIKER/tree/submission). Отчёт сформирован на версии `v1.0.4`.
+Для проверки качества на восьми размеченных сценариях выполните команду ниже. Она сохраняет отчёты, время, токены, пропуски и лишние замечания. Подробности и короткий запуск приведены в [инструкции](evals/README.md).
+
+```sh
+.venv/bin/python -m evals.run --output ../kiker-eval --repeats 3 --baseline
+```
+
+Входное ТЗ, отчёт Gemini, результаты проверок и видео доступны в [комплекте для жюри](https://github.com/Nurdaulet362/BCC_HUB_KIKER/tree/submission). Паспорт каждого отчёта содержит коммит агента и SHA-256 входного файла. [Сценарий защиты и проверка готовности](docs/READINESS.md)

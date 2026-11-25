@@ -1,8 +1,11 @@
 import tempfile
+import hashlib
 from datetime import datetime, timezone
 from pathlib import Path
 import unittest
 from unittest.mock import Mock
+from io import BytesIO
+from urllib.error import HTTPError
 
 from pypdf import PdfWriter
 from pypdf.generic import (
@@ -98,6 +101,18 @@ class KikerTests(unittest.TestCase):
         self.assertEqual(block.original_id, "REQ-3")
         self.assertEqual(block.page, 1)
         self.assertIn("стр. 1", block.location)
+
+    def test_report_fingerprint_identifies_the_actual_input(self):
+        file = source_file(self.directory)
+        original = file.read_bytes()
+        document = read_document(file)
+        file.write_text(MARKDOWN.replace('новый номер', 'другой номер'), encoding='utf-8')
+        revised = read_document(file)
+        self.assertEqual(document.sha256, hashlib.sha256(original).hexdigest())
+        self.assertNotEqual(document.sha256, revised.sha256)
+        run = Run(datetime.now(timezone.utc), 'test', 'test', None, 0, 0, 0, 0)
+        report = render(document, Audit(document.blocks, ()), run)
+        self.assertIn(f'SHA-256 входного файла — `{document.sha256}`', report)
 
     def test_blank_pdf_needs_text_layer(self):
         file = pdf_file(self.directory / "blank.pdf")
@@ -298,7 +313,30 @@ class KikerTests(unittest.TestCase):
         self.assertEqual(payload["systemInstruction"]["parts"], [{"text": "role"}])
         self.assertEqual(payload["generationConfig"]["responseMimeType"], "application/json")
         self.assertNotIn("uniqueItems", payload["generationConfig"]["responseJsonSchema"])
+        self.assertEqual(payload['generationConfig']['thinkingConfig'], {'thinkingLevel': 'MEDIUM'})
         self.assertEqual((client.calls, client.input_tokens, client.output_tokens), (1, 19, 10))
+
+    def test_gemini_waits_for_retry_after_and_recovers(self):
+        with unittest.mock.patch('kiker.gemini.environment', return_value={'GEMINI_API_KEY': 'test'}):
+            client = Gemini()
+        limited = HTTPError('https://example.test', 429, 'quota', {'Retry-After': '45'}, None)
+        with (
+            unittest.mock.patch('kiker.gemini.urlopen', side_effect=[limited, BytesIO(b'{}')]) as request,
+            unittest.mock.patch('kiker.gemini.time.sleep') as sleep,
+        ):
+            self.assertEqual(client._generate({}), {})
+        sleep.assert_any_call(45)
+        self.assertEqual(request.call_count, 2)
+
+    def test_gemini_rejects_nonfinite_request_interval(self):
+        for interval in ('nan', 'inf', '-1', '61'):
+            with self.subTest(interval=interval), unittest.mock.patch(
+                'kiker.gemini.environment', return_value={
+                    'GEMINI_API_KEY': 'test', 'KIKER_REQUEST_INTERVAL': interval,
+                },
+            ):
+                with self.assertRaisesRegex(RuntimeError, 'KIKER_REQUEST_INTERVAL'):
+                    Gemini()
 
     def test_report_uses_source_quotes_and_consistent_counts(self):
         document = read_document(source_file(self.directory))

@@ -1,6 +1,8 @@
 """Extract citable blocks in document order."""
 
 from dataclasses import dataclass
+import hashlib
+from io import BytesIO
 from pathlib import Path
 import re
 
@@ -45,6 +47,7 @@ class Document:
     name: str
     blocks: tuple[Block, ...]
     empty_pages: tuple[int, ...] = ()
+    sha256: str | None = None
 
 
 def _extract_blocks(pages: list[tuple[int | None, str]]) -> tuple[Block, ...]:
@@ -110,10 +113,13 @@ def _extract_blocks(pages: list[tuple[int | None, str]]) -> tuple[Block, ...]:
 
 def read_document(path: Path) -> Document:
     untitled = path.stem
+    if path.suffix.lower() not in {".md", ".markdown", ".pdf"}:
+        raise DocumentError("Поддерживаются текстовые PDF и Markdown (.md, .markdown).")
+    data = path.read_bytes()
     match path.suffix.lower():
         case ".md" | ".markdown":
             try:
-                content = path.read_text(encoding="utf-8-sig")
+                content = data.decode("utf-8-sig")
             except UnicodeError as error:
                 raise DocumentError("Сохраните Markdown в UTF-8.") from error
             heading = next(
@@ -127,7 +133,7 @@ def read_document(path: Path) -> Document:
             from pypdf.errors import PyPdfError
 
             try:
-                with path.open("rb") as file:
+                with BytesIO(data) as file:
                     reader = PdfReader(file)
                     if reader.is_encrypted:
                         raise DocumentError("Передайте PDF без пароля.")
@@ -146,4 +152,4 @@ def read_document(path: Path) -> Document:
         raise DocumentError("В документе нет извлекаемого текста. Для скана нужен OCR.")
     pages_with_text = {block.page for block in blocks}
     empty_pages = tuple(page for page, _ in pages if page is not None and page not in pages_with_text)
-    return Document(title, path.name, blocks, empty_pages)
+    return Document(title, path.name, blocks, empty_pages, hashlib.sha256(data).hexdigest())

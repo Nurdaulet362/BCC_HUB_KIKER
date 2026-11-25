@@ -36,10 +36,14 @@ class Gemini:
             raise ModelError("Проверьте модель Gemini в KIKER_MODEL.")
         try:
             self.timeout = float(values.get("KIKER_TIMEOUT", "90"))
+            self.request_interval = float(values.get("KIKER_REQUEST_INTERVAL", "6"))
         except ValueError as error:
-            raise ModelError("Проверьте KIKER_TIMEOUT в конфигурации.") from error
+            raise ModelError("Проверьте KIKER_TIMEOUT и KIKER_REQUEST_INTERVAL в конфигурации.") from error
         if not 1 <= self.timeout <= 1800:
             raise ModelError("KIKER_TIMEOUT должен быть от 1 до 1800 секунд.")
+        if not 0 <= self.request_interval <= 60:
+            raise ModelError("KIKER_REQUEST_INTERVAL должен быть от 0 до 60 секунд.")
+        self._next_request = 0.0
         self.calls = 0
         self.input_tokens = 0
         self.output_tokens = 0
@@ -53,6 +57,8 @@ class Gemini:
         )
         request.add_unredirected_header("x-goog-api-key", self.key)
         for attempt in range(4):
+            time.sleep(max(0, self._next_request - time.monotonic()))
+            self._next_request = time.monotonic() + self.request_interval
             try:
                 with urlopen(request, timeout=self.timeout) as response:
                     result = json.load(response)
@@ -62,8 +68,8 @@ class Gemini:
             except HTTPError as error:
                 if error.code in {429, 500, 502, 503, 504} and attempt < 3:
                     retry_after = error.headers.get("Retry-After", "")
-                    delay = min(30, int(retry_after)) if retry_after.isdigit() else (
-                        12 * (attempt + 1) if error.code == 429 else 2 ** (attempt + 1)
+                    delay = min(60, int(retry_after)) if retry_after.isdigit() else (
+                        20 * (attempt + 1) if error.code == 429 else 2 ** (attempt + 1)
                     )
                     time.sleep(delay)
                     continue
@@ -84,12 +90,13 @@ class Gemini:
     def chat(self, system: str, content: str, schema: dict, output_limit: int) -> object:
         config = {
             "temperature": 0,
-            "maxOutputTokens": output_limit + 1024,
+            "maxOutputTokens": output_limit + 2048,
             "responseMimeType": "application/json",
             "responseJsonSchema": _api_schema(schema),
         }
         if self.model.startswith("gemini-3"):
-            config["thinkingConfig"] = {"thinkingLevel": "LOW"}
+            level = "MEDIUM" if self.model.startswith("gemini-3.5-flash-lite") else "LOW"
+            config["thinkingConfig"] = {"thinkingLevel": level}
         if self.model.startswith("gemini-2.5-flash"):
             config["thinkingConfig"] = {"thinkingBudget": 0}
         result = self._generate({

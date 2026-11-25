@@ -256,8 +256,14 @@ def _confirm_findings(
             f"{key} | {KINDS[finding.kind]} | {', '.join(finding.sources)} | {finding.description}"
             for key, finding in batch.items()
         )
+        previous = "\n".join(
+            f"{', '.join(finding.sources)} | {finding.description}" for finding in confirmed
+        )
         result, invalid = _ask_records(
-            reviewer, VERIFY, f"Черновики\n{drafts}\n\nИсходные фрагменты\n{source}", schema, 500,
+            reviewer, VERIFY,
+            f"Уже подтверждённые причины\n{previous or 'Нет'}\n"
+            "Исключи повтор этих причин, даже если вид замечания и набор ссылок отличаются.\n\n"
+            f"Черновики\n{drafts}\n\nИсходные фрагменты\n{source}", schema, 700,
         )
         verified_ids = {record["id"] for record in result["confirmed"]}
         confirmed.extend(finding for key, finding in batch.items() if key in verified_ids)
@@ -355,6 +361,8 @@ SET_PASSES = (
 Если максимальная частота и исключение применимы одновременно, покажи один сценарий
 с уже выполненным действием, изменением настройки и следующим событием,
 которое удовлетворяет условию исключения. Проверь оба правила на этом сценарии.
+Не считай слово «независимо» автоматическим разрешением нарушить явно заданный максимум.
+Если приоритет этих двух обязательств не задан, сохрани замечание о конфликте.
 Свяжи правила, касающиеся одного объекта, даже если они в разных разделах.
 В этом проходе сверяй само поведение. Таблицы приёмки и детали HTTP проверяются отдельно.
 Для конфликта назови сценарий, в котором два процитированных правила дают разные результаты.

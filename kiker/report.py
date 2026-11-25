@@ -79,6 +79,8 @@ def render(document: Document, audit: Audit, run: Run) -> str:
         f"- Время — {run.seconds:.1f} с. Запросов — {run.requests}. "
         f"Токенов — {run.input_tokens} входных и {run.output_tokens} выходных.",
     ]
+    if document.sha256:
+        report.append(f"- SHA-256 входного файла — `{document.sha256}`.")
     if document.empty_pages:
         pages = ", ".join(map(str, document.empty_pages))
         report.append(f"- Страницы без извлечённого текста — {pages}. Полнота проверки ограничена.")
