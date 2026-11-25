@@ -6,7 +6,7 @@ from typing import Callable, Iterable, Protocol
 
 from jsonschema import Draft202012Validator
 
-from .acceptance import matches_expense_exclusion
+from .acceptance import compare_expense_period, expense_month_rule, matches_expense_exclusion
 from .config import ModelError
 from .source import Block, Document
 
@@ -289,6 +289,36 @@ def _matches_acceptance_rule(finding: Finding, source: dict[str, Block]) -> bool
     )
 
 
+def _check_expense_periods(scope: list[Block]) -> dict[tuple[str, ...], Finding | None]:
+    rules = [
+        (block, rule) for block in scope
+        if not _matches_section(block, ACCEPTANCE_SECTION)
+        and (rule := expense_month_rule(block.text)) is not None
+    ]
+    if len(rules) != 1:
+        return {}
+    source, rule = rules[0]
+    results = {}
+    for block in scope:
+        if not _matches_section(block, ACCEPTANCE_SECTION):
+            continue
+        period = compare_expense_period(rule, block.text)
+        if period is None:
+            continue
+        refs = tuple(sorted((source.id, block.id)))
+        results[refs] = None
+        if period.rule_month != period.expected_month:
+            results[refs] = Finding(
+                "conflict", "critical",
+                f"Покупку совершили {period.purchase}, а провели {period.posting}. "
+                f"По правилу месяц расходов — {period.rule_month}. "
+                f"Критерий приёмки увеличивает счётчик за другой месяц — {period.expected_month}.",
+                "Какую дату использовать для определения месяца расходов по этой покупке?",
+                refs, "Сверка критериев приёмки",
+            )
+    return results
+
+
 def _findings(items: list[dict], scope: str) -> Iterable[Finding]:
     for item in items:
         severity = item["severity"]
@@ -402,17 +432,25 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
 
     rank = {severity: order for order, severity in enumerate(SEVERITIES)}
     source = {block.id: block for block in scope}
+    checked_periods = _check_expense_periods(scope)
     unique = {}
     for item in sorted(findings, key=lambda finding: (rank[finding.severity], finding.sources)):
-        if _grounded_design_detail(item, source) and not _matches_acceptance_rule(item, source):
+        if item.sources in checked_periods or not _grounded_design_detail(item, source):
+            continue
+        if not _matches_acceptance_rule(item, source):
             unique.setdefault((item.kind, item.sources), item)
     confirmed = ()
     if unique:
         progress("Подтверждение замечаний по исходному ТЗ")
         confirmed, invalid = _confirm_findings(reviewer, list(unique.values()), scope)
         rejected += invalid
+    verified_periods = [finding for finding in checked_periods.values() if finding is not None]
+    ordered_findings = sorted(
+        [*verified_periods, *confirmed],
+        key=lambda finding: (rank[finding.severity], finding.sources),
+    )
     return Audit(
         tuple(block for block in document.blocks if block.id in discovered),
-        confirmed,
+        tuple(ordered_findings),
         rejected,
     )

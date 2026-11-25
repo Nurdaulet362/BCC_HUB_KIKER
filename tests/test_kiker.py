@@ -11,7 +11,12 @@ from pypdf.generic import (
     NameObject,
 )
 
-from kiker.acceptance import matches_expense_exclusion
+from kiker.acceptance import (
+    ExpensePeriod,
+    compare_expense_period,
+    expense_month_rule,
+    matches_expense_exclusion,
+)
 from kiker.audit import Audit, Finding, review
 from kiker.gemini import Gemini
 from kiker.ollama import FormatUnavailable, Ollama, Settings
@@ -223,6 +228,45 @@ class KikerTests(unittest.TestCase):
         )
         result = review(document, reviewer, lambda _: None)
         self.assertEqual([finding.sources for finding in result.findings], [("S001", "S003")])
+
+    def test_purchase_month_depends_on_the_explicit_rule(self):
+        row = (
+            "| Покупка 31 декабря в 23:50 на 6 100 ₸ "
+            "| Провести 1 января в 00:05 по Алматы "
+            "| Январский счётчик вырос на 6 100 ₸ |"
+        )
+        purchase_rule = expense_month_rule("Месяц определяется по дате совершения покупки в Алматы.")
+        posting_rule = expense_month_rule("Месяц определяется по дате проведения покупки в Алматы.")
+        self.assertEqual(
+            compare_expense_period(purchase_rule, row),
+            ExpensePeriod("31 декабря", "1 января", "декабрь", "январь"),
+        )
+        self.assertEqual(
+            compare_expense_period(posting_rule, row),
+            ExpensePeriod("31 декабря", "1 января", "январь", "январь"),
+        )
+        self.assertIsNone(compare_expense_period(purchase_rule, row.replace("по Алматы", "по Астане")))
+        self.assertIsNone(compare_expense_period(purchase_rule, row.replace("31 декабря", "32 декабря")))
+        self.assertIsNone(compare_expense_period(purchase_rule, row.replace("вырос на 6 100", "вырос на 7 100")))
+
+    def test_reports_explicit_month_conflict_even_if_model_misses_it(self):
+        document = read_document(source_file(
+            self.directory,
+            "# Учёт расходов\n\n"
+            "REQ-1. Месяц определяется по дате совершения покупки.\n\n"
+            "## Критерии приёмки\n\n"
+            "| Покупка 30 апреля в 23:50 на 6 100 ₸ | Провести 1 мая в 00:05 | Майский счётчик вырос на 6 100 ₸ |\n"
+            "| Покупка 30 апреля в 23:50 на 6 100 ₸ | Провести 1 мая в 00:05 | Апрельский счётчик вырос на 6 100 ₸ |\n",
+        ))
+        reviewer = Responses(
+            {"requirements": ["S001"], "issues": []},
+            {"issues": []}, {"issues": []},
+            {"issues": [issue(sources=["S001", "S003"])]}, {"issues": []},
+        )
+        audit = review(document, reviewer, lambda _: None)
+        self.assertEqual([(f.kind, f.severity, f.sources) for f in audit.findings],
+                         [("conflict", "critical", ("S001", "S002"))])
+        self.assertIn("месяц расходов — апрель", audit.findings[0].description)
 
     def test_schema_fallback_keeps_the_same_contract(self):
         client = Ollama(Settings("http://127.0.0.1:11434", "test", 4096, 30))
