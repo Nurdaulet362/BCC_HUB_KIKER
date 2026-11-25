@@ -82,11 +82,11 @@ def issue(kind="conflict", sources=None):
     }
 
 
-def confirmation(quote, verdict="defect"):
+def confirmation(quote, verdict="defect", kind="conflict", sources=("S001", "S002")):
     return {"checks": [{
         "id": "C001", "required_action_quote": quote,
         "scenario": "Один вход требует разных обязательных результатов.",
-        "verdict": verdict, "reason": "Проверено обязательное действие и его результат.",
+        "verdict": verdict, "kind": kind, "sources": list(sources), "reason": "Проверено обязательное действие и его результат.",
     }]}
 
 
@@ -177,6 +177,7 @@ class KikerTests(unittest.TestCase):
         for response, count, rejected in (
             (confirmation(quote), 1, 0),
             (confirmation(quote, 'optional_detail'), 0, 0),
+            (confirmation(quote, sources=('S001',)), 0, 1),
             (confirmation('', 'outside_scope'), 0, 0),
             (confirmation('Сервис обязан отправить письмо.'), 0, 1),
             (confirmation(''), 0, 1),
@@ -186,6 +187,17 @@ class KikerTests(unittest.TestCase):
                     Responses(response), [finding], list(document.blocks))
                 self.assertEqual(len(confirmed), count)
                 self.assertEqual(invalid, rejected)
+
+    def test_confirmation_can_reclassify_a_mislabelled_local_conflict(self):
+        document = read_document(source_file(self.directory))
+        draft = Finding('compound', 'critical', 'Правила требуют разных номеров.',
+                        'Какой номер вернуть?', ('S001',), 'Отдельное требование')
+        confirmed, invalid = _confirm_findings(
+            Responses(confirmation('Повторный запрос возвращает старый номер.')),
+            [draft], list(document.blocks))
+        self.assertEqual(invalid, 0)
+        self.assertEqual([(f.kind, f.sources, f.scope) for f in confirmed],
+                         [('conflict', ('S001', 'S002'), 'Проверка набора требований')])
 
     def test_single_citation_conflict_never_reaches_report(self):
         document = read_document(source_file(self.directory))
@@ -251,7 +263,7 @@ class KikerTests(unittest.TestCase):
         reviewer = Responses(
             {"requirements": ["S001", "S002"], "issues": []},
             {"issues": []}, {"issues": [unsupported, required]}, {"issues": []}, {"issues": []},
-            confirmation("Строки сверки должны быть отсортированы по сумме."),
+            confirmation("Строки сверки должны быть отсортированы по сумме.", kind="ambiguous", sources=("S002",)),
         )
         result = review(document, reviewer, lambda _: None)
         self.assertEqual([finding.sources for finding in result.findings], [("S002",)])
@@ -287,7 +299,7 @@ class KikerTests(unittest.TestCase):
             {"issues": []}, {"issues": []},
             {"issues": [issue(sources=["S001", "S002"]), issue(sources=["S001", "S003"])]},
             {"issues": []},
-            confirmation("Переводы исключаются."),
+            confirmation("Переводы исключаются.", sources=("S001", "S003")),
         )
         result = review(document, reviewer, lambda _: None)
         self.assertEqual([finding.sources for finding in result.findings], [("S001", "S003")])

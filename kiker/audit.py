@@ -126,6 +126,13 @@ VERIFY = """Ты проверяешь черновые замечания к Т�
 ли исходник результат: already_defined — результат уже задан, optional_detail —
 деталь можно выбрать, соблюдая все требования, duplicate — причина уже учтена.
 Только доказанное нарушение обязательного результата обозначай defect.
+Для defect исправь kind и sources по существу доказанного дефекта, даже если
+черновик назвал его иначе. Несовместимые результаты для одного сценария —
+conflict с двумя или более источниками. Две трактовки одного пункта — ambiguous;
+недостающее обязательное правило — gap; отсутствие проверяемого критерия —
+unverifiable; лишнее проектное ограничение — prescriptive; независимые,
+но совместимые правила в одном пункте — compound. Противоречие между пунктами
+не является compound. Укажи все источники, необходимые для доказательства.
 В reason объясни решение. Одну причину подтверждай один раз, выбирая точнее
 обоснованный черновик. Верни checks для всех черновиков, включая отклонённые.
 Не подтверждай замечание лишь потому, что оно предложено на проверку. Верни JSON."""
@@ -290,6 +297,10 @@ def _confirm_findings(
                     "verdict": {"type": "string", "enum": [
                         "defect", "already_defined", "optional_detail", "outside_scope", "duplicate",
                     ]},
+                    "kind": {"type": "string", "enum": list(KINDS)},
+                    "sources": {"type": "array", "items": {
+                        "type": "string", "enum": [block.id for block in scope],
+                    }, "minItems": 1, "maxItems": 4, "uniqueItems": True},
                     "reason": {"type": "string", "minLength": 12, "maxLength": 500},
                 }),
                 "maxItems": len(batch),
@@ -310,20 +321,27 @@ def _confirm_findings(
             "Исключи повтор этих причин, даже если вид замечания и набор ссылок отличаются.\n\n"
             f"Черновики\n{drafts}\n\nИсходные фрагменты\n{source}", schema, 2200,
         )
-        verified_ids = set()
+        verified = {}
         for record in result["checks"]:
             if record["verdict"] != "defect":
                 continue
             quote = " ".join(record["required_action_quote"].split())
             finding = batch[record["id"]]
-            evidence = [" ".join(block.text.split()) for block in scope if block.id in finding.sources]
+            references = tuple(block.id for block in scope if block.id in record["sources"])
+            evidence = [" ".join(block.text.split()) for block in scope if block.id in references]
             if len(quote) < 12 or not record["scenario"].strip() or not any(quote in text for text in evidence):
+                invalid += 1
+                continue
+            if record["kind"] == "conflict" and len(references) < 2:
                 invalid += 1
                 continue
             decisions = [item["verdict"] for item in result["checks"] if item["id"] == record["id"]]
             if all(verdict == "defect" for verdict in decisions):
-                verified_ids.add(record["id"])
-        confirmed.extend(finding for key, finding in batch.items() if key in verified_ids)
+                verified[record["id"]] = Finding(
+                    record["kind"], finding.severity, finding.description, finding.question,
+                    references, "Проверка набора требований" if len(references) > 1 else finding.scope,
+                )
+        confirmed.extend(verified.values())
         rejected += invalid
     return tuple(confirmed), rejected
 
@@ -516,7 +534,7 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
         confirmed, invalid = _confirm_findings(reviewer, list(unique.values()), scope, verified_periods)
         rejected += invalid
     ordered_findings = sorted(
-        [*verified_periods, *confirmed],
+        [*verified_periods, *(finding for finding in confirmed if finding.sources not in checked_periods)],
         key=lambda finding: (rank[finding.severity], finding.sources),
     )
     return Audit(
