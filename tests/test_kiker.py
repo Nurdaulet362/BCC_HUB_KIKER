@@ -110,6 +110,7 @@ class KikerTests(unittest.TestCase):
             {"issues": [issue(sources=["S002", "S001"])]},
             {"issues": []},
             {"issues": []},
+            {"confirmed": [{"id": "C001", "impact": "При повторе правила требуют разных номеров."}]},
         )
         audit = review(document, reviewer, lambda _: None)
         self.assertEqual([item.original_id for item in audit.requirements], ["R-17", "R-19"])
@@ -127,6 +128,33 @@ class KikerTests(unittest.TestCase):
         result = review(document, reviewer, lambda _: None)
         self.assertEqual(result.findings, ())
         self.assertEqual(result.rejected, 1)
+
+    def test_omits_discretionary_ui_and_sort_order_from_report(self):
+        document = read_document(source_file(
+            self.directory,
+            "# Выгрузка\n\n"
+            "REQ-1. При ошибке дат клиент видит сообщение, файл не формируется.\n"
+            "REQ-2. CSV включает все операции за указанный период.\n",
+        ))
+        ui = {
+            **issue("gap", ["S001"]),
+            "description": "Не указано, отключать ли кнопку выгрузки при ошибке дат.",
+            "question": "Должна ли кнопка быть отключена?",
+        }
+        ordering = {
+            **issue("gap", ["S002"]),
+            "description": "Не указан порядок сортировки операций в файле.",
+            "question": "Как сортировать строки файла?",
+        }
+        reviewer = Responses(
+            {"requirements": ["S001", "S002"], "issues": []},
+            {"issues": []}, {"issues": [ui, ordering]}, {"issues": []}, {"issues": []},
+            {"confirmed": []},
+        )
+        audit = review(document, reviewer, lambda _: None)
+        self.assertEqual(audit.requirements, document.blocks)
+        self.assertEqual(audit.findings, ())
+        self.assertEqual(audit.rejected, 0)
 
     def test_schema_fallback_keeps_the_same_contract(self):
         client = Ollama(Settings("http://127.0.0.1:11434", "test", 4096, 30))
