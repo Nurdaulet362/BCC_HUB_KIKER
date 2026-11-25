@@ -304,6 +304,22 @@ class KikerTests(unittest.TestCase):
         result = review(document, reviewer, lambda _: None)
         self.assertEqual([finding.sources for finding in result.findings], [("S001", "S003")])
 
+    def test_reclassified_transfer_finding_is_checked_against_the_total(self):
+        for total, count in (('19 900', 0), ('20 400', 1)):
+            with self.subTest(total=total):
+                document = read_document(source_file(self.directory,
+                    '# Расходы\n\nREQ-1. В расходы входят покупки. Переводы исключаются.\n\n'
+                    '## Приёмка\n\n'
+                    f'| Расходы 19 900 ₸ | Перевести 500 ₸ | Счётчик показывает {total} ₸ |\n'))
+                draft = {**issue('gap', ['S001']), 'description': 'Нужно уточнить учёт перевода.'}
+                verifier = confirmation('Переводы исключаются.', kind='ambiguous' if count == 0 else 'conflict')
+                reviewer = Responses(
+                    {'requirements': ['S001'], 'issues': [draft]},
+                    {'issues': []}, {'issues': []}, {'issues': []}, {'issues': []}, verifier)
+                audit = review(document, reviewer, lambda _: None)
+                self.assertEqual(len(audit.findings), count)
+                self.assertEqual(audit.rejected, 0)
+
     def test_purchase_month_depends_on_the_explicit_rule(self):
         row = (
             "| Покупка 31 декабря в 23:50 на 6 100 ₸ "

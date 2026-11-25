@@ -361,7 +361,7 @@ def _grounded_design_detail(finding: Finding, source: dict[str, Block]) -> bool:
 
 
 def _matches_acceptance_rule(finding: Finding, source: dict[str, Block]) -> bool:
-    if finding.kind != "conflict" or len(finding.sources) != 2:
+    if len(finding.sources) != 2:
         return False
     first, second = (source[ref] for ref in finding.sources)
     if _matches_section(first, ACCEPTANCE_SECTION):
@@ -534,7 +534,10 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
         confirmed, invalid = _confirm_findings(reviewer, list(unique.values()), scope, verified_periods)
         rejected += invalid
     ordered_findings = sorted(
-        [*verified_periods, *(finding for finding in confirmed if finding.sources not in checked_periods)],
+        [*verified_periods, *(finding for finding in confirmed
+                             if finding.sources not in checked_periods
+                             and not _matches_acceptance_rule(finding, source)
+                             and _grounded_design_detail(finding, source))],
         key=lambda finding: (rank[finding.severity], finding.sources),
     )
     return Audit(
