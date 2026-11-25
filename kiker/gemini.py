@@ -9,7 +9,7 @@ from urllib.request import Request, urlopen
 from .config import ModelError, environment
 
 
-DEFAULT_MODEL = "gemini-3-flash-preview"
+DEFAULT_MODEL = "gemini-3.1-flash-lite"
 API_ROOT = "https://generativelanguage.googleapis.com/v1beta/models/"
 
 
