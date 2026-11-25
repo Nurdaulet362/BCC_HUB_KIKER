@@ -161,6 +161,32 @@ class KikerTests(unittest.TestCase):
         self.assertEqual(audit.findings, ())
         self.assertEqual(audit.rejected, 0)
 
+    def test_order_finding_requires_evidence_of_order_in_cited_rule(self):
+        document = read_document(source_file(
+            self.directory,
+            "# Выгрузка\n\n"
+            "REQ-1. Файл включает все операции за период.\n"
+            "REQ-2. Строки сверки должны быть отсортированы по сумме.\n",
+        ))
+        unsupported = {
+            **issue("ambiguous", ["S001"]),
+            "severity": "minor",
+            "description": "Порядок строк файла не определён.",
+            "question": "В каком порядке должны быть отсортированы строки файла?",
+        }
+        required = {
+            **issue("ambiguous", ["S002"]),
+            "description": "Направление обязательной сортировки по сумме не задано.",
+            "question": "Сортировать строки по возрастанию или по убыванию суммы?",
+        }
+        reviewer = Responses(
+            {"requirements": ["S001", "S002"], "issues": []},
+            {"issues": []}, {"issues": [unsupported, required]}, {"issues": []}, {"issues": []},
+            {"confirmed": [{"id": "C001", "impact": "Направление изменяет проверку обязательного порядка."}]},
+        )
+        result = review(document, reviewer, lambda _: None)
+        self.assertEqual([finding.sources for finding in result.findings], [("S002",)])
+
     def test_schema_fallback_keeps_the_same_contract(self):
         client = Ollama(Settings("http://127.0.0.1:11434", "test", 4096, 30))
         reply = {"message": {"content": '```json\n{"issues":[]}\n```'}}

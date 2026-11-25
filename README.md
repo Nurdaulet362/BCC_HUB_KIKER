@@ -54,4 +54,4 @@ PDF должен содержать текстовый слой. Для скан
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-Входное ТЗ, отчёт Gemini и видео доступны в [комплекте для жюри](https://github.com/Nurdaulet362/BCC_HUB_KIKER/tree/submission). Отчёт сформирован на версии `v1.0.1`.
+Входное ТЗ, отчёт Gemini и видео доступны в [комплекте для жюри](https://github.com/Nurdaulet362/BCC_HUB_KIKER/tree/submission). Отчёт сформирован на версии `v1.0.2`.
