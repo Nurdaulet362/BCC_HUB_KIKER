@@ -108,6 +108,8 @@ class KikerTests(unittest.TestCase):
             {"requirements": ["S001"], "issues": []},
             {"issues": [issue(sources=["S001", "S999"]), issue()]},
             {"issues": [issue(sources=["S002", "S001"])]},
+            {"issues": []},
+            {"issues": []},
         )
         audit = review(document, reviewer, lambda _: None)
         self.assertEqual([item.original_id for item in audit.requirements], ["R-17", "R-19"])
@@ -118,7 +120,10 @@ class KikerTests(unittest.TestCase):
     def test_single_citation_conflict_never_reaches_report(self):
         document = read_document(source_file(self.directory))
         refusal = {"issues": [issue(sources=["S001"])]}
-        reviewer = Responses({"requirements": [], "issues": []}, refusal, {"issues": []})
+        reviewer = Responses(
+            {"requirements": [], "issues": []}, refusal,
+            {"issues": []}, {"issues": []}, {"issues": []},
+        )
         result = review(document, reviewer, lambda _: None)
         self.assertEqual(result.findings, ())
         self.assertEqual(result.rejected, 1)
