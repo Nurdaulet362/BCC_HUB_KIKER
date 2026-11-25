@@ -146,9 +146,14 @@ class KikerTests(unittest.TestCase):
             "description": "Не указан порядок сортировки операций в файле.",
             "question": "Как сортировать строки файла?",
         }
+        empty_period = {
+            **issue("gap", ["S002"]),
+            "description": "Нет отдельного правила для периода без операций.",
+            "question": "Что вернуть, если операций нет?",
+        }
         reviewer = Responses(
             {"requirements": ["S001", "S002"], "issues": []},
-            {"issues": []}, {"issues": [ui, ordering]}, {"issues": []}, {"issues": []},
+            {"issues": []}, {"issues": [ui, ordering, empty_period]}, {"issues": []}, {"issues": []},
             {"confirmed": []},
         )
         audit = review(document, reviewer, lambda _: None)
