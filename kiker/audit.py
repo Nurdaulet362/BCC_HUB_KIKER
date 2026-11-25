@@ -46,6 +46,9 @@ OUTPUT_ORDER = re.compile(
     re.I,
 )
 CONTROL = re.compile(r"\b(?:кнопк\w*|button)\b", re.I)
+ENVIRONMENT = re.compile(r"\b(?:prod\w*|продакш\w*|промышлен\w*|сред\w*)\b", re.I)
+ADDRESS = re.compile(r"\b(?:url|адрес\w*|домен\w*)\b", re.I)
+ADDRESS_METADATA = re.compile(r"^\|\s*\*{0,2}(?:request url|url type|swagger)\*{0,2}\s*\|", re.I)
 CONTROL_STATE = re.compile(
     r"\b(?:активн\w*|неактивн\w*|отключ\w*|блокир\w*|заблокир\w*|"
     r"enable[ds]?|disable[ds]?|active|inactive)\b",
@@ -225,9 +228,18 @@ def _ask_records(
     raise ModelError(f"Ответ модели не прошёл валидацию после трёх попыток: {detail}.")
 
 
-def _ask(reviewer: Reviewer, instruction: str, blocks: list[Block], *, local: bool) -> tuple[dict, int]:
+def _ask(
+    reviewer: Reviewer, instruction: str, blocks: list[Block], *, local: bool,
+    context: list[Block] | None = None,
+) -> tuple[dict, int]:
+    if context is not None:
+        instruction += (
+            "\nПроверяемые фрагменты: " + ", ".join(block.id for block in blocks)
+            + ". Выбирай requirements и issues только для них. Остальные фрагменты "
+            "служат контекстом: учитывай заданные в них правила, ограничения и определения."
+        )
     return _ask_records(
-        reviewer, SYSTEM, f"{instruction}\n\nИсходные фрагменты\n{_pack(blocks)}",
+        reviewer, SYSTEM, f"{instruction}\n\nИсходные фрагменты\n{_pack(context if context is not None else blocks)}",
         _schema(blocks, local), 1900 if local else 2200,
     )
 
@@ -275,6 +287,9 @@ def _grounded_design_detail(finding: Finding, source: dict[str, Block]) -> bool:
     if finding.kind not in {"ambiguous", "gap", "unverifiable"}:
         return True
     evidence = [source[ref].text for ref in finding.sources]
+    if ENVIRONMENT.search(finding.question) and ADDRESS.search(finding.question):
+        if all(ADDRESS_METADATA.match(line) for line in evidence):
+            return False
     if OUTPUT_ORDER.search(finding.question) and not any(OUTPUT_ORDER.search(line) for line in evidence):
         return False
     if CONTROL.search(finding.question) and CONTROL_STATE.search(finding.question):
@@ -422,7 +437,7 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
     batches = list(_batches(candidates))
     for number, batch in enumerate(batches, start=1):
         progress(f"Проверка формулировок {number}/{len(batches)}")
-        result, rejected_in_batch = _ask(reviewer, LOCAL, batch, local=True)
+        result, rejected_in_batch = _ask(reviewer, LOCAL, batch, local=True, context=scope)
         rejected += rejected_in_batch
         discovered.update(result["requirements"])
         discovered.update(source for item in result["issues"] for source in item["sources"])

@@ -20,7 +20,7 @@ from kiker.acceptance import (
     expense_month_rule,
     matches_expense_exclusion,
 )
-from kiker.audit import Audit, Finding, review
+from kiker.audit import Audit, Finding, LOCAL, _ask, _grounded_design_detail, review
 from kiker.gemini import Gemini
 from kiker.ollama import FormatUnavailable, Ollama, Settings
 from kiker.report import Run, render
@@ -113,6 +113,27 @@ class KikerTests(unittest.TestCase):
         run = Run(datetime.now(timezone.utc), 'test', 'test', None, 0, 0, 0, 0)
         report = render(document, Audit(document.blocks, ()), run)
         self.assertIn(f'SHA-256 входного файла — `{document.sha256}`', report)
+
+    def test_local_batch_sees_rules_from_the_rest_of_document(self):
+        document = read_document(source_file(self.directory))
+        reviewer = Mock()
+        reviewer.chat.return_value = {'requirements': ['S001'], 'issues': []}
+        _ask(reviewer, LOCAL, [document.blocks[0]], local=True, context=list(document.blocks))
+        _, content, schema, _ = reviewer.chat.call_args.args
+        self.assertIn(document.blocks[1].text, content)
+        self.assertEqual(schema['properties']['requirements']['items']['enum'], ['S001'])
+
+    def test_environment_address_gap_needs_a_behaviour_requirement(self):
+        document = read_document(source_file(self.directory,
+            '# API\n\n| **Request URL** | Dev: /limit. Prod: — |\n\n'
+            'REQ-1. Приложение обязано использовать указанный промышленный URL для приёмки.\n'))
+        source = {block.id: block for block in document.blocks}
+        unsupported = Finding('gap', 'major', 'Нет адреса среды.', 'Какой URL в среде Prod?',
+                              ('S001',), 'Отдельное требование')
+        self.assertFalse(_grounded_design_detail(unsupported, source))
+        required = Finding('gap', 'major', unsupported.description, unsupported.question,
+                           ('S001', 'S002'), 'Полнота')
+        self.assertTrue(_grounded_design_detail(required, source))
 
     def test_blank_pdf_needs_text_layer(self):
         file = pdf_file(self.directory / "blank.pdf")
