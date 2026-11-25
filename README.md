@@ -32,7 +32,7 @@ cp .env.example .env
 | `KIKER_TIMEOUT` | `90` | Таймаут HTTP-запроса к Gemini в секундах |
 | `KIKER_REQUEST_INTERVAL` | `15` | Минимальный интервал между началами запросов Gemini в одном процессе |
 
-Gemini 3.1 Flash-Lite используется с уровнем рассуждения MEDIUM. Запускайте массовую проверку последовательно, учитывая общую квоту проекта Google. При временном HTTP 429 агент делает до трёх повторов с паузой. При исчерпании дневной квоты он сразу сообщает причину. Фактические лимиты зависят от аккаунта. [Лимиты Gemini](https://aistudio.google.com/docs/rate-limits) · [Уровни рассуждения](https://aistudio.google.com/docs/thinking)
+Gemini 3.1 Flash-Lite используется с уровнем рассуждения MEDIUM. Запускайте массовую проверку последовательно, учитывая общую квоту проекта Google. При временном HTTP 429 агент делает до трёх повторов с паузой, при сетевом сбое — до двух. При исчерпании дневной квоты он сразу сообщает причину. Фактические лимиты зависят от аккаунта. [Лимиты Gemini](https://aistudio.google.com/docs/rate-limits) · [Уровни рассуждения](https://aistudio.google.com/docs/thinking)
 
 Для локального прогона через Ollama запустите `ollama serve`, загрузите модель командой `ollama pull qwen3.5:4b` и задайте `KIKER_PROVIDER=ollama`, `KIKER_MODEL=qwen3.5:4b` и `KIKER_TIMEOUT=300` в `.env`. Адрес Ollama по умолчанию — `http://127.0.0.1:11434`. Его можно изменить через `OLLAMA_URL`, а размер контекста через `KIKER_CONTEXT`.
 

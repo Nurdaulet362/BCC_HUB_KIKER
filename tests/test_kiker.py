@@ -6,7 +6,7 @@ from pathlib import Path
 import unittest
 from unittest.mock import Mock
 from io import BytesIO
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 from pypdf import PdfWriter
 from pypdf.generic import (
@@ -428,6 +428,29 @@ class KikerTests(unittest.TestCase):
             ):
                 with self.assertRaisesRegex(RuntimeError, 'KIKER_REQUEST_INTERVAL'):
                     Gemini()
+
+    def test_gemini_recovers_from_transient_network_failure(self):
+        with unittest.mock.patch('kiker.gemini.environment', return_value={'GEMINI_API_KEY': 'test'}):
+            client = Gemini()
+        with (
+            unittest.mock.patch('kiker.gemini.urlopen', side_effect=[
+                TimeoutError(), URLError('temporary'), BytesIO(b'{}'),
+            ]) as request,
+            unittest.mock.patch('kiker.gemini.time.sleep'),
+        ):
+            self.assertEqual(client._generate({}), {})
+        self.assertEqual(request.call_count, 3)
+
+    def test_gemini_stops_after_bounded_network_retries(self):
+        with unittest.mock.patch('kiker.gemini.environment', return_value={'GEMINI_API_KEY': 'test'}):
+            client = Gemini()
+        with (
+            unittest.mock.patch('kiker.gemini.urlopen', side_effect=TimeoutError()) as request,
+            unittest.mock.patch('kiker.gemini.time.sleep'),
+        ):
+            with self.assertRaisesRegex(RuntimeError, 'подключиться'):
+                client._generate({})
+        self.assertEqual(request.call_count, 3)
 
     def test_gemini_does_not_retry_an_exhausted_daily_quota(self):
         with unittest.mock.patch('kiker.gemini.environment', return_value={'GEMINI_API_KEY': 'test'}):

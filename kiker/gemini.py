@@ -101,6 +101,9 @@ class Gemini:
                 }
                 raise ModelError(messages.get(error.code, f"Gemini вернул HTTP {error.code}.")) from error
             except (URLError, TimeoutError) as error:
+                if attempt < 2:
+                    time.sleep(2 ** (attempt + 1))
+                    continue
                 raise ModelError("Не удалось подключиться к Gemini API.") from error
             except (UnicodeError, json.JSONDecodeError) as error:
                 raise ModelError("Gemini вернул нечитаемый ответ.") from error
