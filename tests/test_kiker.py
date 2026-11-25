@@ -2,6 +2,7 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 import unittest
+from unittest.mock import Mock
 
 from pypdf import PdfWriter
 from pypdf.generic import (
@@ -11,7 +12,7 @@ from pypdf.generic import (
 )
 
 from kiker.audit import Audit, Finding, review
-from kiker.ollama import ModelError
+from kiker.ollama import FormatUnavailable, ModelError, Ollama, Settings
 from kiker.report import Run, render
 from kiker.source import DocumentError, read_document
 
@@ -119,6 +120,19 @@ class KikerTests(unittest.TestCase):
         reviewer = Responses({"requirements": [], "issues": []}, refusal, refusal, refusal)
         with self.assertRaisesRegex(ModelError, "двух разных источников"):
             review(document, reviewer, lambda _: None)
+
+    def test_schema_fallback_keeps_the_same_contract(self):
+        client = Ollama(Settings("http://127.0.0.1:11434", "test", 4096, 30))
+        reply = {"message": {"content": '```json\n{"issues":[]}\n```'}}
+        client._request = Mock(side_effect=[FormatUnavailable(), reply, reply])
+        schema = {"type": "object"}
+        self.assertEqual(client.chat("role", "input", schema, 250), {"issues": []})
+        self.assertEqual(client.chat("role", "input", schema, 250), {"issues": []})
+        requests = [call.args[1] for call in client._request.call_args_list]
+        self.assertEqual(requests[0]["format"], schema)
+        self.assertNotIn("format", requests[1])
+        self.assertNotIn("format", requests[2])
+        self.assertIn('{"type":"object"}', requests[1]["messages"][0]["content"])
 
     def test_report_uses_source_quotes_and_consistent_counts(self):
         document = read_document(source_file(self.directory))

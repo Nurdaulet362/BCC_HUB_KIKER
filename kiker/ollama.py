@@ -4,6 +4,7 @@ import json
 from dataclasses import dataclass
 import os
 from pathlib import Path
+import re
 import time
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
@@ -12,6 +13,10 @@ from urllib.request import Request, urlopen
 
 class ModelError(RuntimeError):
     """The model service could not complete a review."""
+
+
+class FormatUnavailable(ModelError):
+    """The selected runner does not implement native schema constraints."""
 
 
 def _dotenv(path: Path) -> dict[str, str]:
@@ -58,6 +63,7 @@ class Settings:
 class Ollama:
     def __init__(self, settings: Settings):
         self.settings = settings
+        self.native_schema = True
         self.calls = 0
         self.input_tokens = 0
         self.output_tokens = 0
@@ -72,13 +78,18 @@ class Ollama:
         for attempt in range(2):
             try:
                 with urlopen(request, timeout=self.settings.timeout) as response:
-                    return json.load(response)
+                    body = json.load(response)
+                    if not isinstance(body, dict):
+                        raise ModelError("Ollama вернул ответ вместо JSON-объекта.")
+                    return body
             except HTTPError as error:
                 if error.code in {429, 502, 503, 504} and attempt == 0:
                     time.sleep(1)
                     continue
                 if error.code == 404 and endpoint == "/api/chat":
                     raise ModelError(f"Модель недоступна. Выполните ollama pull {self.settings.model}.") from error
+                if error.code == 501 and data and "format" in data:
+                    raise FormatUnavailable("У драйвера нет встроенной поддержки JSON Schema.") from error
                 raise ModelError(f"Ollama вернул HTTP {error.code} для {endpoint}.") from error
             except (URLError, TimeoutError) as error:
                 raise ModelError(f"Ollama недоступен по адресу {self.settings.base_url}. Запустите ollama serve.") from error
@@ -94,14 +105,10 @@ class Ollama:
         return next((tag["digest"] for tag in tags if tag.get("name") == model and tag.get("digest")), None)
 
     def chat(self, system: str, content: str, schema: dict, output_limit: int) -> object:
-        # Bound the request before Ollama can silently drop the oldest source text.
-        if len(system) + len(content) > (self.settings.context - output_limit - 512) * 2:
-            raise ModelError("Текст не помещается в контекст модели. Увеличьте KIKER_CONTEXT для этой модели.")
-        response = self._request("/api/chat", {
+        request = {
             "model": self.settings.model,
             "stream": False,
             "think": False,
-            "format": schema,
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": content}],
             "options": {
                 "temperature": 0,
@@ -110,13 +117,34 @@ class Ollama:
                 "num_predict": output_limit,
                 "presence_penalty": 0,
             },
-        })
+        }
+        # Bound the request before Ollama can silently drop the oldest source text.
+        limit = (self.settings.context - output_limit - 512) * 2
+        if len(system) + len(content) > limit:
+            raise ModelError("Текст не помещается в контекст модели. Увеличьте KIKER_CONTEXT для этой модели.")
+        if self.native_schema:
+            try:
+                response = self._request("/api/chat", {**request, "format": schema})
+            except FormatUnavailable:
+                self.native_schema = False
+        if not self.native_schema:
+            system += (
+                "\nВерни только один JSON-объект без ограждений Markdown. Схема ответа:\n"
+                + json.dumps(schema, ensure_ascii=False, separators=(",", ":"))
+            )
+            if len(system) + len(content) > limit:
+                raise ModelError("Исходник и схема не помещаются в контекст модели. Увеличьте KIKER_CONTEXT.")
+            request["messages"][0]["content"] = system
+            response = self._request("/api/chat", request)
+
         self.calls += 1
         self.input_tokens += response.get("prompt_eval_count", 0)
         self.output_tokens += response.get("eval_count", 0)
         if response.get("done_reason") == "length":
             raise ModelError("Модель исчерпала лимит ответа. Попробуйте модель с более стабильным JSON.")
         try:
-            return json.loads(response["message"]["content"])
-        except (KeyError, TypeError, json.JSONDecodeError) as error:
+            answer = response["message"]["content"].strip()
+            wrapper = re.fullmatch(r"```(?:json)?\s*([\s\S]*?)\s*```", answer, flags=re.I)
+            return json.loads(wrapper.group(1) if wrapper else answer)
+        except (AttributeError, KeyError, TypeError, json.JSONDecodeError) as error:
             raise ValueError("пустой или незавершённый JSON") from error
