@@ -119,10 +119,16 @@ VERIFY = """Ты проверяешь черновые замечания к Т�
 эффект. Проверка исключённой операции согласована с правилом, если после неё
 показатель не изменился. Само выполнение такой операции в тесте допустимо.
 Опирайся прежде всего на цитируемые фрагменты и восстанови сценарий сам.
-Для каждой подтверждённой записи укажи ID черновика и в impact опиши конкретный
-сценарий и обязательный результат, на который влияет дефект. Одну причину
-подтверждай один раз, выбирая точнее обоснованный черновик. Если обоснования
-недостаточно, не включай запись. Пустой confirmed допустим. Верни только JSON."""
+Для каждого черновика сначала восстанови действие, которое само ТЗ требует
+выполнить, и выпиши его дословную цитату в required_action_quote. Если такого
+действия в исходнике нет, оставь цитату пустой и выбери outside_scope.
+В scenario опиши один конкретный вход из области ТЗ. Затем проверь, определяет
+ли исходник результат: already_defined — результат уже задан, optional_detail —
+деталь можно выбрать, соблюдая все требования, duplicate — причина уже учтена.
+Только доказанное нарушение обязательного результата обозначай defect.
+В reason объясни решение. Одну причину подтверждай один раз, выбирая точнее
+обоснованный черновик. Верни checks для всех черновиков, включая отклонённые.
+Не подтверждай замечание лишь потому, что оно предложено на проверку. Верни JSON."""
 
 
 class Reviewer(Protocol):
@@ -275,11 +281,16 @@ def _confirm_findings(
         batch = {f"C{index:03}": finding for index, finding in
                  enumerate(findings[start:start + 4], start=start + 1)}
         schema = _object({
-            "confirmed": {
+            "checks": {
                 "type": "array",
                 "items": _object({
                     "id": {"type": "string", "enum": list(batch)},
-                    "impact": {"type": "string", "minLength": 12, "maxLength": 300},
+                    "required_action_quote": {"type": "string", "maxLength": 600},
+                    "scenario": {"type": "string", "maxLength": 400},
+                    "verdict": {"type": "string", "enum": [
+                        "defect", "already_defined", "optional_detail", "outside_scope", "duplicate",
+                    ]},
+                    "reason": {"type": "string", "minLength": 12, "maxLength": 500},
                 }),
                 "maxItems": len(batch),
                 "uniqueItems": True,
@@ -297,9 +308,21 @@ def _confirm_findings(
             reviewer, VERIFY,
             f"Уже подтверждённые причины\n{previous or 'Нет'}\n"
             "Исключи повтор этих причин, даже если вид замечания и набор ссылок отличаются.\n\n"
-            f"Черновики\n{drafts}\n\nИсходные фрагменты\n{source}", schema, 700,
+            f"Черновики\n{drafts}\n\nИсходные фрагменты\n{source}", schema, 2200,
         )
-        verified_ids = {record["id"] for record in result["confirmed"]}
+        verified_ids = set()
+        for record in result["checks"]:
+            if record["verdict"] != "defect":
+                continue
+            quote = " ".join(record["required_action_quote"].split())
+            finding = batch[record["id"]]
+            evidence = [" ".join(block.text.split()) for block in scope if block.id in finding.sources]
+            if len(quote) < 12 or not record["scenario"].strip() or not any(quote in text for text in evidence):
+                invalid += 1
+                continue
+            decisions = [item["verdict"] for item in result["checks"] if item["id"] == record["id"]]
+            if all(verdict == "defect" for verdict in decisions):
+                verified_ids.add(record["id"])
         confirmed.extend(finding for key, finding in batch.items() if key in verified_ids)
         rejected += invalid
     return tuple(confirmed), rejected

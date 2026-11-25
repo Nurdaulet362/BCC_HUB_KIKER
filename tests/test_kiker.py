@@ -21,7 +21,7 @@ from kiker.acceptance import (
     expense_month_rule,
     matches_expense_exclusion,
 )
-from kiker.audit import Audit, Finding, LOCAL, _ask, _grounded_design_detail, review
+from kiker.audit import Audit, Finding, LOCAL, _ask, _confirm_findings, _grounded_design_detail, review
 from kiker.gemini import Gemini
 from kiker.ollama import FormatUnavailable, Ollama, Settings
 from kiker.report import Run, render
@@ -80,6 +80,14 @@ def issue(kind="conflict", sources=None):
         "description": "Два правила требуют разных номеров при повторе.",
         "question": "Какой номер возвращать повторно?",
     }
+
+
+def confirmation(quote, verdict="defect"):
+    return {"checks": [{
+        "id": "C001", "required_action_quote": quote,
+        "scenario": "Один вход требует разных обязательных результатов.",
+        "verdict": verdict, "reason": "Проверено обязательное действие и его результат.",
+    }]}
 
 
 class KikerTests(unittest.TestCase):
@@ -153,13 +161,31 @@ class KikerTests(unittest.TestCase):
             {"issues": [issue(sources=["S002", "S001"])]},
             {"issues": []},
             {"issues": []},
-            {"confirmed": [{"id": "C001", "impact": "При повторе правила требуют разных номеров."}]},
+            confirmation("Повторный запрос возвращает старый номер."),
         )
         audit = review(document, reviewer, lambda _: None)
         self.assertEqual([item.original_id for item in audit.requirements], ["R-17", "R-19"])
         self.assertEqual(len(audit.findings), 1)
         self.assertEqual(audit.findings[0].sources, ("S001", "S002"))
         self.assertEqual(audit.rejected, 1)
+
+    def test_confirmation_requires_a_real_obligation_and_explicit_verdict(self):
+        document = read_document(source_file(self.directory))
+        finding = Finding('conflict', 'critical', 'Два разных номера.',
+                          'Какой номер вернуть?', ('S001', 'S002'), 'Проверка')
+        quote = 'Повторный запрос возвращает старый номер.'
+        for response, count, rejected in (
+            (confirmation(quote), 1, 0),
+            (confirmation(quote, 'optional_detail'), 0, 0),
+            (confirmation('', 'outside_scope'), 0, 0),
+            (confirmation('Сервис обязан отправить письмо.'), 0, 1),
+            (confirmation(''), 0, 1),
+        ):
+            with self.subTest(response=response):
+                confirmed, invalid = _confirm_findings(
+                    Responses(response), [finding], list(document.blocks))
+                self.assertEqual(len(confirmed), count)
+                self.assertEqual(invalid, rejected)
 
     def test_single_citation_conflict_never_reaches_report(self):
         document = read_document(source_file(self.directory))
@@ -197,7 +223,7 @@ class KikerTests(unittest.TestCase):
         reviewer = Responses(
             {"requirements": ["S001", "S002"], "issues": []},
             {"issues": []}, {"issues": [ui, ordering, empty_period]}, {"issues": []}, {"issues": []},
-            {"confirmed": []},
+            {"checks": []},
         )
         audit = review(document, reviewer, lambda _: None)
         self.assertEqual(audit.requirements, document.blocks)
@@ -225,7 +251,7 @@ class KikerTests(unittest.TestCase):
         reviewer = Responses(
             {"requirements": ["S001", "S002"], "issues": []},
             {"issues": []}, {"issues": [unsupported, required]}, {"issues": []}, {"issues": []},
-            {"confirmed": [{"id": "C001", "impact": "Направление изменяет проверку обязательного порядка."}]},
+            confirmation("Строки сверки должны быть отсортированы по сумме."),
         )
         result = review(document, reviewer, lambda _: None)
         self.assertEqual([finding.sources for finding in result.findings], [("S002",)])
@@ -261,7 +287,7 @@ class KikerTests(unittest.TestCase):
             {"issues": []}, {"issues": []},
             {"issues": [issue(sources=["S001", "S002"]), issue(sources=["S001", "S003"])]},
             {"issues": []},
-            {"confirmed": [{"id": "C001", "impact": "Ожидаемый счётчик включает исключённую операцию."}]},
+            confirmation("Переводы исключаются."),
         )
         result = review(document, reviewer, lambda _: None)
         self.assertEqual([finding.sources for finding in result.findings], [("S001", "S003")])
@@ -313,7 +339,7 @@ class KikerTests(unittest.TestCase):
         reviewer = Mock()
         reviewer.chat.side_effect = [
             {'requirements': ['S001'], 'issues': [issue('ambiguous', ['S001'])]},
-            {'issues': []}, {'issues': []}, {'issues': []}, {'issues': []}, {'confirmed': []},
+            {'issues': []}, {'issues': []}, {'issues': []}, {'issues': []}, {'checks': []},
         ]
         audit = review(document, reviewer, lambda _: None)
         confirmation = reviewer.chat.call_args.args[1]
