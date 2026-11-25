@@ -404,7 +404,7 @@ class KikerTests(unittest.TestCase):
         self.assertEqual(payload["systemInstruction"]["parts"], [{"text": "role"}])
         self.assertEqual(payload["generationConfig"]["responseMimeType"], "application/json")
         self.assertNotIn("uniqueItems", payload["generationConfig"]["responseJsonSchema"])
-        self.assertEqual(payload['generationConfig']['thinkingConfig'], {'thinkingLevel': 'MEDIUM'})
+        self.assertEqual(payload['generationConfig']['thinkingConfig'], {'thinkingLevel': 'LOW'})
         self.assertEqual((client.calls, client.input_tokens, client.output_tokens), (1, 19, 10))
 
     def test_gemini_waits_for_retry_after_and_recovers(self):

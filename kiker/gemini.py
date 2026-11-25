@@ -9,7 +9,7 @@ from urllib.request import Request, urlopen
 from .config import ModelError, environment
 
 
-DEFAULT_MODEL = "gemini-3.1-flash-lite"
+DEFAULT_MODEL = "gemini-3-flash-preview"
 API_ROOT = "https://generativelanguage.googleapis.com/v1beta/models/"
 
 
@@ -35,7 +35,7 @@ class Gemini:
         if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", self.model):
             raise ModelError("Проверьте модель Gemini в KIKER_MODEL.")
         try:
-            self.timeout = float(values.get("KIKER_TIMEOUT", "90"))
+            self.timeout = float(values.get("KIKER_TIMEOUT", "45"))
             self.request_interval = float(values.get("KIKER_REQUEST_INTERVAL", "15"))
         except ValueError as error:
             raise ModelError("Проверьте KIKER_TIMEOUT и KIKER_REQUEST_INTERVAL в конфигурации.") from error
@@ -117,7 +117,7 @@ class Gemini:
             "responseJsonSchema": _api_schema(schema),
         }
         if self.model.startswith("gemini-3"):
-            config["thinkingConfig"] = {"thinkingLevel": "MEDIUM" if "flash" in self.model else "LOW"}
+            config["thinkingConfig"] = {"thinkingLevel": "MEDIUM" if self.model.startswith("gemini-3.1-flash-lite") else "LOW"}
         if self.model.startswith("gemini-2.5-flash"):
             config["thinkingConfig"] = {"thinkingBudget": 0}
         result = self._generate({
