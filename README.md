@@ -30,7 +30,7 @@ cp .env.example .env
 | `GEMINI_API_KEY` | задаётся локально | Ключ Gemini Developer API |
 | `KIKER_MODEL` | `gemini-3.1-flash-lite` | Модель выбранного провайдера |
 | `KIKER_TIMEOUT` | `90` | Таймаут HTTP-запроса к Gemini в секундах |
-| `KIKER_REQUEST_INTERVAL` | `6` | Минимальный интервал между началами запросов Gemini в одном процессе |
+| `KIKER_REQUEST_INTERVAL` | `15` | Минимальный интервал между началами запросов Gemini в одном процессе |
 
 Gemini 3.1 Flash-Lite используется с уровнем рассуждения MEDIUM. Запускайте массовую проверку последовательно, учитывая общую квоту проекта Google. При временном HTTP 429 агент делает до трёх повторов с паузой. При исчерпании дневной квоты он сразу сообщает причину. Фактические лимиты зависят от аккаунта. [Лимиты Gemini](https://aistudio.google.com/docs/rate-limits) · [Уровни рассуждения](https://aistudio.google.com/docs/thinking)
 
