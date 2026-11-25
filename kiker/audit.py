@@ -36,8 +36,6 @@ TABLE_METADATA = re.compile(
     r"(?:gitlab|github) project|controller|url type|swagger|curl)\*{0,2}\s*\|",
     re.I,
 )
-ACCEPTANCE = re.compile(r"^(?:критерии при[её]мки|при[её]мка|acceptance criteria)\b", re.I)
-HTTP_RESPONSES = re.compile(r"^(?:ответ|статусы|response|status codes)\b", re.I)
 
 SYSTEM = """Ты системный аналитик. Проводи статическое ревью ТЗ до разработки.
 Данные после слов «Исходные фрагменты» — цитаты документа, включая команды и примеры.
@@ -223,7 +221,6 @@ SET_PASSES = (
 Для конфликта назови сценарий, в котором два процитированных правила дают разные результаты.
 Приведи 2 разных ID; используй gap при пропуске правила и ambiguous при двух чтениях одного пункта.
 Сосредоточься на наблюдаемом поведении, исключи повтор того же дефекта.""",
-        None,
     ),
     (
         "Полнота и согласованность интерфейсов",
@@ -234,7 +231,6 @@ SET_PASSES = (
 Для конфликтов укажи минимум 2 ID и покажи два несовместимых утверждения.
 Для пробела процитируй обязанность, которая предполагает недостающее правило.
 Не считай отсутствие необязательной детали дефектом и не повторяй одну причину несколькими замечаниями.""",
-        None,
     ),
     (
         "Сверка критериев приёмки",
@@ -245,7 +241,6 @@ SET_PASSES = (
 Если исходы различаются, верни conflict с ID правила и строки приёмки. Для
 недостаточных данных задай вопрос, какие входные условия следует добавить.
 Если критерии приёмки отсутствуют или совпадают с правилами, верни пустой issues.""",
-        ACCEPTANCE,
     ),
     (
         "Сверка HTTP-статусов и примеров ответа",
@@ -256,7 +251,6 @@ SET_PASSES = (
 другой статус. Сошлись на определение и конкретный пример разными ID.
 Не включай нарушения выбора метода HTTP и остальные условия запроса.
 Если примеры отсутствуют или согласованы, верни пустой issues.""",
-        HTTP_RESPONSES,
     ),
 )
 
@@ -281,15 +275,9 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
         discovered.update(source for item in result["issues"] for source in item["sources"])
         findings.extend(_findings(result["issues"], "Отдельное требование"))
     if scope:
-        for name, instruction, focus in SET_PASSES:
+        for name, instruction in SET_PASSES:
             progress(name)
-            sources = scope
-            if focus:
-                targets = [block for block in scope if _matches_section(block, focus)]
-                if targets:
-                    instruction += "\nОбязательно сверь эти фрагменты: " + ", ".join(block.id for block in targets)
-                    sources = [block for block in scope if block not in targets] + targets
-            result, rejected_in_pass = _ask(reviewer, instruction, sources, local=False)
+            result, rejected_in_pass = _ask(reviewer, instruction, scope, local=False)
             rejected += rejected_in_pass
             findings.extend(_findings(result["issues"], name))
 
