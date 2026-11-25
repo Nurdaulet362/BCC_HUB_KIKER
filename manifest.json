@@ -1,0 +1,154 @@
+{
+  "code_revision": "d23a93d02fe2139c305dc0a6b053749fbed75d00",
+  "model": "gemini-3.1-flash-lite",
+  "thinking_level": "MEDIUM",
+  "temperature": 0,
+  "request_interval_seconds": 15,
+  "timeout_seconds": 45,
+  "network_retries": 2,
+  "official_source_revision": "928c1aa364265426105b69ba7a3444eac11b22db",
+  "extended_diagnostic_revision": "2e0dae6b961c0845b3821266600eebd3c656f3f7",
+  "video_seconds": 113.3,
+  "files": {
+    "README.md": {
+      "bytes": 3123,
+      "sha256": "b5a9d808bd964cb0611c4d91a3324be46f8dcf4ed92ab9a83afa378c9b3758a6"
+    },
+    "requirements.md": {
+      "bytes": 13507,
+      "sha256": "e7dae55e5453a250d93e335f5ff9c7f775f4457ccddd333f4a67e47b20d74381"
+    },
+    "report.md": {
+      "bytes": 27278,
+      "sha256": "7e22b6e4766b09ef9d1290f43bb04f3257ce38a5dd902f9f4f025aff591040aa"
+    },
+    "QUALITY.md": {
+      "bytes": 8346,
+      "sha256": "996e34ffad86e3085381b7ede211968ab0618702f48632cffcbcaad814743022"
+    },
+    "DEMO.md": {
+      "bytes": 5795,
+      "sha256": "d5d60b5cdbf4900b7ef63f4d6c3ea56e2e6f91e7a92276be421d1a673f4d355f"
+    },
+    "demo.mp4": {
+      "bytes": 2153486,
+      "sha256": "2abf0b6a87c38b051def361351c4b9475b987e434d3ffaceb6e4afe9e20c90f2"
+    },
+    "validation/cli-checks.json": {
+      "bytes": 465,
+      "sha256": "6901cdcff18d03c8697d302559ae7b334421f55a6ba01f3723142cdadf62a603"
+    },
+    "validation/control-conflict.pdf": {
+      "bytes": 40792,
+      "sha256": "5a18bfb458781163381f68cb8c79a740ad2d5d9d123d157d9b8e8422453ac29c"
+    },
+    "validation/extended-2e0dae6/baseline-clean-export-1.md": {
+      "bytes": 6097,
+      "sha256": "ee79b18ddcfcfa3dd2af53a171952d7bd675400a70abb9d3b937366575ad9621"
+    },
+    "validation/extended-2e0dae6/baseline-clean-receipt-1.md": {
+      "bytes": 5937,
+      "sha256": "f58287e6343ffa4aa33be610441a77487fc16b4da803a3b90ff2d73f1326c354"
+    },
+    "validation/extended-2e0dae6/baseline-idempotency-conflict-1.md": {
+      "bytes": 4583,
+      "sha256": "497702cca81332e8047dc9e2e732fc23a534202ea175add21e1d2ce1bced128e"
+    },
+    "validation/extended-2e0dae6/baseline-january-conflict-1.md": {
+      "bytes": 5141,
+      "sha256": "7bdd986c78616ce521d7b082243c52984099f0986bf0498f8e80290308b3f08c"
+    },
+    "validation/extended-2e0dae6/baseline-january-corrected-1.md": {
+      "bytes": 5189,
+      "sha256": "c998f14e4252e0bb860225c5f9ef932508c744bc7db334d025fce2c8a16d2a9c"
+    },
+    "validation/extended-2e0dae6/baseline-paraphrased-conflict-1.md": {
+      "bytes": 5713,
+      "sha256": "c2b96104bacaa3e3ac5d5416e4b6f846e4cea111acb9872ef42899616cf98633"
+    },
+    "validation/extended-2e0dae6/baseline-posting-month-1.md": {
+      "bytes": 5816,
+      "sha256": "337645e045e51749bee766318df826777a08da6a709080c76d45495150858f3f"
+    },
+    "validation/extended-2e0dae6/baseline-transfer-conflict-1.md": {
+      "bytes": 5745,
+      "sha256": "79df7b975071aa848119b5e01f21cebd984424d8215abdb3e778d5d54fc70b6d"
+    },
+    "validation/extended-2e0dae6/kiker-clean-export-1.md": {
+      "bytes": 4716,
+      "sha256": "d4fdf1b7f65568b1aed9772be6f0484500fba5c9dc657ea6f8900e00e019aa17"
+    },
+    "validation/extended-2e0dae6/kiker-clean-receipt-1.md": {
+      "bytes": 4636,
+      "sha256": "6ec5ef29370df7bf9e1976dcc5ba4b5b4156c4c4fdd9304580956fc3d20fc51d"
+    },
+    "validation/extended-2e0dae6/kiker-idempotency-conflict-1.md": {
+      "bytes": 3336,
+      "sha256": "8dfbd13bd3f32b0d5e65512a3e9cc9d1c668b0944eb876e4f0bf02dd5464504a"
+    },
+    "validation/extended-2e0dae6/kiker-january-conflict-1.md": {
+      "bytes": 3875,
+      "sha256": "8888674a39ae48b11f3d82a6284b6a00a0d27cffe280b9d7deb2530be36702bc"
+    },
+    "validation/extended-2e0dae6/kiker-january-corrected-1.md": {
+      "bytes": 2772,
+      "sha256": "cb04146c8c7a76ad4f1306279fecf7bc50af3cdac5d52486726848c0ffa802dc"
+    },
+    "validation/extended-2e0dae6/kiker-paraphrased-conflict-1.md": {
+      "bytes": 4813,
+      "sha256": "2df9e980858fcda357ff93c788f25a120e1480d22d975ed6db4e01be27fe10c4"
+    },
+    "validation/extended-2e0dae6/kiker-posting-month-1.md": {
+      "bytes": 2768,
+      "sha256": "6d3b78a6c250682897b0b97886aa58a41dfb91030b6a1d49b757f70647dd6d61"
+    },
+    "validation/extended-2e0dae6/kiker-transfer-conflict-1.md": {
+      "bytes": 3904,
+      "sha256": "188e4488b2e6758ec42b67aca9b1ef296dd3469d97b829d3943583f6aeb53f0e"
+    },
+    "validation/extended-2e0dae6/results.json": {
+      "bytes": 20998,
+      "sha256": "d39b296b24f34581f95542df318cc3e07a397552cd097ea1a7ea858cfe0f70c2"
+    },
+    "validation/official-1.md": {
+      "bytes": 27278,
+      "sha256": "7e22b6e4766b09ef9d1290f43bb04f3257ce38a5dd902f9f4f025aff591040aa"
+    },
+    "validation/official-2.md": {
+      "bytes": 27278,
+      "sha256": "4144a6d827074adce6d0285c728c61a75ffc62eab295542cc9c1243bd68d626d"
+    },
+    "validation/official-3.md": {
+      "bytes": 27278,
+      "sha256": "bb9d296a9e02ef291b2ec036d603df357ac57d5f6bc739ef5410197012b58ae9"
+    },
+    "validation/pdf-report.md": {
+      "bytes": 5903,
+      "sha256": "ea6498b1759f6f811bd02868fdab887e829188ae645cb533d265825546f473de"
+    },
+    "validation/repeat/kiker-january-conflict-1.md": {
+      "bytes": 3875,
+      "sha256": "18ec1b146b39533e6fbcf7046d2b21c98ecca854c6438d2cea14ee772a483d3a"
+    },
+    "validation/repeat/kiker-january-conflict-2.md": {
+      "bytes": 3874,
+      "sha256": "02666318d7acd05f3afff48dc35b48919d2645d9240675c8be90835472bff49e"
+    },
+    "validation/repeat/kiker-january-corrected-1.md": {
+      "bytes": 2773,
+      "sha256": "99d48cf73c3121dea10c11f45571a0d8c4d11a4ee89b02a86ead3fd5cce1dd01"
+    },
+    "validation/repeat/kiker-january-corrected-2.md": {
+      "bytes": 2772,
+      "sha256": "399fecc158a34e01552170c4e28849b8f38b84454b00e7b3f470a200d9d558b1"
+    },
+    "validation/repeat/results.json": {
+      "bytes": 3539,
+      "sha256": "8edf7b8fe361db452e11353773428e71b1838a02f9b5ceca0069415a669038fe"
+    },
+    "validation/unit-tests.log": {
+      "bytes": 3825,
+      "sha256": "eb21b5d38119dc892ae502c8ba0ba63763342d8a3c0f234ceadca837563fb9f8"
+    }
+  }
+}
