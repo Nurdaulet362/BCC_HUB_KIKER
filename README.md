@@ -4,7 +4,7 @@ KIKER помогает системному аналитику проверит�
 
 ## Запуск
 
-Понадобятся Python 3.11–3.14, интернет и ключ Gemini API. Основная модель — Gemini 3.5 Flash-Lite, доступная на бесплатном тарифе. Создайте ключ в [Google AI Studio](https://aistudio.google.com/apikey). [Тарифы Gemini](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.5-flash-lite)
+Понадобятся Python 3.11–3.14, интернет и ключ Gemini API. Основная модель — Gemini 3.1 Flash-Lite, доступная на бесплатном тарифе. Создайте ключ в [Google AI Studio](https://aistudio.google.com/apikey). [Тарифы Gemini](https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite)
 
 ```sh
 python3 -m venv .venv
@@ -28,11 +28,11 @@ cp .env.example .env
 | --- | --- | --- |
 | `KIKER_PROVIDER` | `gemini` | Провайдер модели. Поддерживаются `gemini` и `ollama` |
 | `GEMINI_API_KEY` | задаётся локально | Ключ Gemini Developer API |
-| `KIKER_MODEL` | `gemini-3.5-flash-lite` | Модель выбранного провайдера |
+| `KIKER_MODEL` | `gemini-3.1-flash-lite` | Модель выбранного провайдера |
 | `KIKER_TIMEOUT` | `90` | Таймаут HTTP-запроса к Gemini в секундах |
 | `KIKER_REQUEST_INTERVAL` | `6` | Минимальный интервал между началами запросов Gemini в одном процессе |
 
-Gemini 3.5 Flash-Lite используется с уровнем рассуждения MEDIUM. Запускайте массовую проверку последовательно, учитывая общую квоту проекта Google. При HTTP 429 агент делает до трёх повторов с паузой. Фактические лимиты зависят от аккаунта. [Лимиты Gemini](https://aistudio.google.com/docs/rate-limits) · [Уровни рассуждения](https://aistudio.google.com/docs/thinking)
+Gemini 3.1 Flash-Lite используется с уровнем рассуждения MEDIUM. Запускайте массовую проверку последовательно, учитывая общую квоту проекта Google. При временном HTTP 429 агент делает до трёх повторов с паузой. При исчерпании дневной квоты он сразу сообщает причину. Фактические лимиты зависят от аккаунта. [Лимиты Gemini](https://aistudio.google.com/docs/rate-limits) · [Уровни рассуждения](https://aistudio.google.com/docs/thinking)
 
 Для локального прогона через Ollama запустите `ollama serve`, загрузите модель командой `ollama pull qwen3.5:4b` и задайте `KIKER_PROVIDER=ollama`, `KIKER_MODEL=qwen3.5:4b` и `KIKER_TIMEOUT=300` в `.env`. Адрес Ollama по умолчанию — `http://127.0.0.1:11434`. Его можно изменить через `OLLAMA_URL`, а размер контекста через `KIKER_CONTEXT`.
 

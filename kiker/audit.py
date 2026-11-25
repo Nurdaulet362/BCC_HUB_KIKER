@@ -70,6 +70,9 @@ critical — нельзя однозначно реализовать или п�
 major — существенная доработка ТЗ; minor — локальное уточнение.
 Не выдумывай требования к инфраструктуре, безопасности, нагрузке и форматам, если документ не требует их.
 Обоснованные форматы интерфейсов и структуры данных сами по себе не дефект.
+Документ может быть полностью согласован. В этом случае issues должен быть пустым.
+Исключение операции из расчёта означает, что она не изменяет этот показатель.
+Само по себе исключение не требует ошибки, отдельного обработчика или нового правила.
 Не требуй отдельное описание частного случая, если общее правило уже определяет его результат.
 Замечание допустимо, когда нельзя однозначно вывести обязательный результат или проверить его."""
 
@@ -95,6 +98,9 @@ VERIFY = """Ты проверяешь черновые замечания к Т�
 корректного интервала задан CSV с фиксированными колонками и только подходящими
 строками, интервал без совпадений даёт CSV с колонками и без строк данных.
 Отсутствие специальной обработки этого случая не является пробелом.
+Явно названная дата события определяет выбор периода. Если ТЗ выбирает дату
+совершения покупки, отличай её от отдельно указанной даты проведения. Не объявляй
+этот явный выбор неоднозначным лишь потому, что две даты могут различаться.
 В критерии приёмки отдельно сверь исходное состояние, действие и ожидаемый
 эффект. Проверка исключённой операции согласована с правилом, если после неё
 показатель не изменился. Само выполнение такой операции в тесте допустимо.
@@ -246,6 +252,7 @@ def _ask(
 
 def _confirm_findings(
     reviewer: Reviewer, findings: list[Finding], scope: list[Block],
+    established: tuple[Finding, ...] = (),
 ) -> tuple[tuple[Finding, ...], int]:
     source = _pack(scope)
     confirmed = []
@@ -269,7 +276,8 @@ def _confirm_findings(
             for key, finding in batch.items()
         )
         previous = "\n".join(
-            f"{', '.join(finding.sources)} | {finding.description}" for finding in confirmed
+            f"{', '.join(finding.sources)} | {finding.description}"
+            for finding in (*established, *confirmed)
         )
         result, invalid = _ask_records(
             reviewer, VERIFY,
@@ -463,11 +471,11 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
         if not _matches_acceptance_rule(item, source):
             unique.setdefault((item.kind, item.sources), item)
     confirmed = ()
+    verified_periods = tuple(finding for finding in checked_periods.values() if finding is not None)
     if unique:
         progress("Подтверждение замечаний по исходному ТЗ")
-        confirmed, invalid = _confirm_findings(reviewer, list(unique.values()), scope)
+        confirmed, invalid = _confirm_findings(reviewer, list(unique.values()), scope, verified_periods)
         rejected += invalid
-    verified_periods = [finding for finding in checked_periods.values() if finding is not None]
     ordered_findings = sorted(
         [*verified_periods, *confirmed],
         key=lambda finding: (rank[finding.severity], finding.sources),

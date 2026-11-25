@@ -305,6 +305,22 @@ class KikerTests(unittest.TestCase):
                          [("conflict", "critical", ("S001", "S002"))])
         self.assertIn("месяц расходов — апрель", audit.findings[0].description)
 
+    def test_confirmation_knows_the_programmatically_verified_period(self):
+        document = read_document(source_file(self.directory,
+            '# Расходы\n\nREQ-1. Месяц определяется по дате совершения покупки.\n\n'
+            '## Приёмка\n\n'
+            '| Покупка 30 апреля на 500 ₸ | Провести 1 мая | Майский счётчик вырос на 500 ₸ |\n'))
+        reviewer = Mock()
+        reviewer.chat.side_effect = [
+            {'requirements': ['S001'], 'issues': [issue('ambiguous', ['S001'])]},
+            {'issues': []}, {'issues': []}, {'issues': []}, {'issues': []}, {'confirmed': []},
+        ]
+        audit = review(document, reviewer, lambda _: None)
+        confirmation = reviewer.chat.call_args.args[1]
+        self.assertIn('месяц расходов — апрель', confirmation)
+        self.assertIn('S001, S002', confirmation)
+        self.assertEqual(len(audit.findings), 1)
+
     def test_schema_fallback_keeps_the_same_contract(self):
         client = Ollama(Settings("http://127.0.0.1:11434", "test", 4096, 30))
         reply = {"message": {"content": '```json\n{"issues":[]}\n```'}}

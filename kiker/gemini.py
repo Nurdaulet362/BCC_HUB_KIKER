@@ -9,7 +9,7 @@ from urllib.request import Request, urlopen
 from .config import ModelError, environment
 
 
-DEFAULT_MODEL = "gemini-3.5-flash-lite"
+DEFAULT_MODEL = "gemini-3.1-flash-lite"
 API_ROOT = "https://generativelanguage.googleapis.com/v1beta/models/"
 
 
@@ -109,13 +109,12 @@ class Gemini:
     def chat(self, system: str, content: str, schema: dict, output_limit: int) -> object:
         config = {
             "temperature": 0,
-            "maxOutputTokens": output_limit + 2048,
+            "maxOutputTokens": output_limit + 8192,
             "responseMimeType": "application/json",
             "responseJsonSchema": _api_schema(schema),
         }
         if self.model.startswith("gemini-3"):
-            level = "MEDIUM" if self.model.startswith("gemini-3.5-flash-lite") else "LOW"
-            config["thinkingConfig"] = {"thinkingLevel": level}
+            config["thinkingConfig"] = {"thinkingLevel": "MEDIUM" if "flash" in self.model else "LOW"}
         if self.model.startswith("gemini-2.5-flash"):
             config["thinkingConfig"] = {"thinkingBudget": 0}
         result = self._generate({
