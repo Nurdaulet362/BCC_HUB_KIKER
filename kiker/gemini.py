@@ -35,7 +35,7 @@ class Gemini:
         if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", self.model):
             raise ModelError("Проверьте модель Gemini в KIKER_MODEL.")
         try:
-            self.timeout = float(values.get("KIKER_TIMEOUT", "45"))
+            self.timeout = float(values.get("KIKER_TIMEOUT", "90"))
             self.request_interval = float(values.get("KIKER_REQUEST_INTERVAL", "15"))
         except ValueError as error:
             raise ModelError("Проверьте KIKER_TIMEOUT и KIKER_REQUEST_INTERVAL в конфигурации.") from error
@@ -43,8 +43,13 @@ class Gemini:
             raise ModelError("KIKER_TIMEOUT должен быть от 1 до 1800 секунд.")
         if not 0 <= self.request_interval <= 60:
             raise ModelError("KIKER_REQUEST_INTERVAL должен быть от 0 до 60 секунд.")
+        self.thinking_level = values.get("KIKER_THINKING", "MEDIUM" if self.model.startswith("gemini-3.1-flash-lite") else "LOW").upper()
+        if self.thinking_level not in {"MINIMAL", "LOW", "MEDIUM", "HIGH"}:
+            raise ModelError("KIKER_THINKING должен быть MINIMAL, LOW, MEDIUM или HIGH.")
         self._next_request = 0.0
         self.calls = 0
+        self.attempts = 0
+        self.request_times = []
         self.input_tokens = 0
         self.output_tokens = 0
         self.version = None
@@ -59,6 +64,8 @@ class Gemini:
         for attempt in range(4):
             time.sleep(max(0, self._next_request - time.monotonic()))
             self._next_request = time.monotonic() + self.request_interval
+            self.attempts += 1
+            request_started = time.monotonic()
             try:
                 with urlopen(request, timeout=self.timeout) as response:
                     result = json.load(response)
@@ -107,6 +114,8 @@ class Gemini:
                 raise ModelError("Не удалось подключиться к Gemini API.") from error
             except (UnicodeError, json.JSONDecodeError) as error:
                 raise ModelError("Gemini вернул нечитаемый ответ.") from error
+            finally:
+                self.request_times.append(round(time.monotonic() - request_started, 3))
         raise ModelError("Запрос к Gemini не завершился.")
 
     def chat(self, system: str, content: str, schema: dict, output_limit: int) -> object:
@@ -117,7 +126,7 @@ class Gemini:
             "responseJsonSchema": _api_schema(schema),
         }
         if self.model.startswith("gemini-3"):
-            config["thinkingConfig"] = {"thinkingLevel": "MEDIUM" if self.model.startswith("gemini-3.1-flash-lite") else "LOW"}
+            config["thinkingConfig"] = {"thinkingLevel": self.thinking_level}
         if self.model.startswith("gemini-2.5-flash"):
             config["thinkingConfig"] = {"thinkingBudget": 0}
         result = self._generate({

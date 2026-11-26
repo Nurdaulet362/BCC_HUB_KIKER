@@ -22,6 +22,8 @@ class Run:
     output_tokens: int
     provider: str = "Ollama"
     model_version: str | None = None
+    settings: dict | None = None
+    attempts: int | None = None
 
 
 def _text(value: str) -> str:
@@ -81,6 +83,11 @@ def render(document: Document, audit: Audit, run: Run) -> str:
     ]
     if document.sha256:
         report.append(f"- SHA-256 входного файла — `{document.sha256}`.")
+    if run.settings:
+        report.append(f"- Настройки — thinking {_text(run.settings['thinking_level'])}, temperature 0; "
+                      f"интервал {run.settings['request_interval']} с, таймаут {run.settings['timeout']} с.")
+    if run.attempts is not None:
+        report.append(f"- Попыток HTTP-запроса с учётом повторов — {run.attempts}.")
     if document.empty_pages:
         pages = ", ".join(map(str, document.empty_pages))
         report.append(f"- Страницы без извлечённого текста — {pages}. Полнота проверки ограничена.")

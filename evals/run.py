@@ -14,6 +14,7 @@ from kiker.config import ModelError
 from kiker.gemini import Gemini
 from kiker.report import Run, render
 from kiker.source import read_document
+from kiker.snapshot import snapshot
 
 
 def evaluate(case, document, audit):
@@ -81,6 +82,8 @@ def main():
                     'source_sha256': hashlib.sha256(filename.read_bytes()).hexdigest(),
                     'version': version, 'model': client.model,
                     'suite': args.suite,
+                    'thinking_level': client.thinking_level, 'timeout': client.timeout,
+                    'request_interval': client.request_interval,
                 }
                 try:
                     if mode == 'kiker':
@@ -98,17 +101,24 @@ def main():
                     record['rejected'] = audit.rejected
                     run = Run(datetime.now().astimezone(), version, client.model, None,
                               time.monotonic() - start, client.calls, client.input_tokens,
-                              client.output_tokens, 'Gemini API', client.version)
+                              client.output_tokens, 'Gemini API', client.version,
+                              {'thinking_level': client.thinking_level, 'timeout': client.timeout,
+                               'request_interval': client.request_interval}, client.attempts)
                     _write_report(args.output / f'{mode}-{case["id"]}-{repeat}.md', render(document, audit, run))
+                    _write_report(args.output / f'{mode}-{case["id"]}-{repeat}.json',
+                                  json.dumps(snapshot(document, audit, run), ensure_ascii=False, indent=2) + '\n')
                 except (ModelError, ValueError, OSError) as error:
                     record.update(passed=False, error=str(error))
                 record.update(seconds=round(time.monotonic() - start, 2), requests=client.calls,
                               input_tokens=client.input_tokens, output_tokens=client.output_tokens,
                               model_version=client.version)
+                record.update(attempts=client.attempts, request_seconds=client.request_times)
                 results.append(record)
                 _write_report(args.output / 'results.json', json.dumps(results, ensure_ascii=False, indent=2) + '\n')
                 print(f'{mode} {repeat} {case["id"]}: {"PASS" if record["passed"] else "FAIL"} '
                       f'{record["seconds"]}s', flush=True)
+                if 'дневной лимит' in record.get('error', ''):
+                    return 1
     return int(any(not result['passed'] for result in results if result['mode'] == 'kiker'))
 
 

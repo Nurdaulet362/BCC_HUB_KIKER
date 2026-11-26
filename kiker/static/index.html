@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>KIKER — ревью требований</title>
+  <link rel="stylesheet" href="/app.css">
+  <script defer src="/app.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">К содержимому</a>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="KIKER, новая проверка"><span class="brand-mark">k.</span><span>KIKER<small>ТРЕБОВАНИЯ ПОД КОНТРОЛЕМ</small></span></a>
+      <button id="new-review" class="primary wide"><span aria-hidden="true">＋</span> Новая проверка</button>
+      <div class="section-label">ВАШИ ДОКУМЕНТЫ <span id="history-count">0</span></div>
+      <nav id="history" aria-label="История проверок"></nav>
+      <div class="sidebar-bottom"><span class="status-dot"></span> Локальное рабочее пространство<p>История и решения сохраняются на этом компьютере.</p></div>
+    </aside>
+    <main id="main" tabindex="-1">
+      <header class="topbar"><span>Рабочее пространство <span class="slash">/</span> <strong id="breadcrumb">Новая проверка</strong></span><span class="top-badge">РЕВЬЮ ДО РАЗРАБОТКИ</span></header>
+      <div id="notice" role="alert" hidden></div>
+
+      <section id="upload-view" class="content upload-view">
+        <div class="eyebrow">ОТ ФРАГМЕНТА К РЕШЕНИЮ</div>
+        <h1>Согласуйте требования<br><em>до разработки.</em></h1>
+        <p class="intro">Найдите противоречия, сверьте цитаты и задайте автору ТЗ конкретный вопрос.</p>
+        <div class="upload-layout">
+          <form id="upload-form" class="paper upload-card">
+            <div class="card-heading"><h2>Добавьте техническое задание</h2><span class="step-pill">01 / 03</span></div>
+            <label id="drop-zone" class="drop-zone" tabindex="0">
+              <span class="file-icon" aria-hidden="true">↥</span><strong id="file-label">Выберите файл или перетащите сюда</strong>
+              <span>Markdown или PDF с текстовым слоем · до 8 МБ</span>
+              <input id="document-file" type="file" accept=".md,.markdown,.pdf" class="visually-hidden">
+            </label>
+            <div class="or"><span>или вставьте текст</span></div>
+            <label for="document-text" class="field-label">Требования в Markdown</label>
+            <textarea id="document-text" rows="7" placeholder="# Название документа&#10;&#10;REQ-1. Система должна…"></textarea>
+            <div class="sample-row"><button type="button" id="load-sample" class="text-button">Вставить контрольный пример ↗</button><button type="button" id="clear-input" class="text-button muted">Очистить</button></div>
+            <div class="upload-footer"><p>При запуске текст документа передаётся в Gemini API.</p><button id="submit-review" class="primary" type="submit">Проверить ТЗ <span aria-hidden="true">→</span></button></div>
+          </form>
+          <aside class="guide">
+            <div class="section-label">КАК ПРОХОДИТ РЕВЬЮ</div>
+            <div class="guide-step"><span>01</span><div><h3>Проверка требований</h3><p>Формулировки, бизнес-правила, приёмка и интерфейсы.</p></div></div>
+            <div class="guide-step"><span>02</span><div><h3>Решение по цитатам</h3><p>У каждого замечания — исходные фрагменты и вопрос автору.</p></div></div>
+            <div class="guide-step"><span>03</span><div><h3>Новая версия документа</h3><p>Сравните результаты после согласования и исправлений.</p></div></div>
+            <div class="saved-box"><strong>Уже есть результат?</strong><p>Откройте сохранённый JSON-отчёт KIKER без повторного обращения к модели.</p><button id="import-button" class="secondary">Открыть отчёт</button><input id="import-file" type="file" accept=".json" hidden></div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="progress-view" class="content" hidden>
+        <div class="eyebrow">ПРОВЕРКА ДОКУМЕНТА</div><h1 id="progress-title">Читаем требования</h1>
+        <div class="paper progress-card"><div class="spinner" aria-hidden="true"></div><h2 id="progress-step" aria-live="polite">Ожидает запуска</h2><p id="progress-description">Можно оставить эту вкладку открытой. Результат сохранится в истории.</p><span id="elapsed" class="mono"></span></div>
+        <button id="back-from-progress" class="secondary">К новой проверке</button>
+      </section>
+
+      <section id="review-view" class="content review-view" hidden>
+        <div class="review-heading"><div><div id="run-origin" class="eyebrow">РЕЗУЛЬТАТ ПРОВЕРКИ</div><h1 id="review-title"></h1><p id="review-meta" class="muted"></p></div><div class="heading-actions"><button id="open-compare" class="secondary">Сравнить версии</button><a id="download-report" class="primary" download>Скачать отчёт ↓</a></div></div>
+        <div class="metrics"><div><span>Замечания</span><strong id="metric-total">0</strong></div><div><span>Блокирующие</span><strong id="metric-critical">0</strong></div><div><span>Решения приняты</span><strong id="metric-reviewed">0 / 0</strong></div><div><span>Требования</span><strong id="metric-requirements">0</strong></div></div>
+        <div id="review-limitations" class="info-note"></div>
+        <div class="review-grid">
+          <section class="paper findings-panel"><div class="panel-title"><h2>Замечания</h2><select id="finding-filter" aria-label="Фильтр замечаний"><option value="all">Все</option><option value="pending">Без решения</option><option value="accepted">Подтверждены</option><option value="rejected">Отклонены</option><option value="clarify">На уточнении</option></select></div><div id="findings-list"></div></section>
+          <section id="finding-detail" class="paper detail-panel" aria-label="Замечание и источники"></section>
+        </div>
+        <details class="passport"><summary>Паспорт прогона и сохранённые материалы</summary><dl id="passport-fields"></dl><div class="inline-actions"><a id="download-json" class="text-button" download>JSON-отчёт</a><a id="download-decisions" class="text-button" download>Отчёт с решениями аналитика</a></div></details>
+      </section>
+
+      <section id="compare-view" class="content" hidden>
+        <div class="eyebrow">ПОСЛЕ СОГЛАСОВАНИЯ</div><h1>Что изменилось в ревью</h1><p class="intro">Сопоставьте замечания двух завершённых проверок.</p>
+        <form id="compare-form" class="paper compare-controls"><label>Предыдущая проверка<select id="compare-before" required></select></label><span aria-hidden="true">→</span><label>Новая проверка<select id="compare-after" required></select></label><button class="primary" type="submit">Сравнить</button></form>
+        <p class="info-note">Замечания сопоставляются по источникам и тексту. Если замечание не повторилось, это ещё не доказывает исправление: сверьте новую редакцию ТЗ.</p>
+        <div id="comparison-result" aria-live="polite"></div>
+        <button id="back-to-review" class="secondary">Вернуться к отчёту</button>
+      </section>
+      <footer>Решение о готовности ТЗ принимает автор и аналитик.<span>KIKER · BCC-HUB × MNU</span></footer>
+    </main>
+  </div>
+</body>
+</html>
