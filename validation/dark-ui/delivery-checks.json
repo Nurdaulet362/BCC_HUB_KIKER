@@ -1,0 +1,19 @@
+{
+  "ui_revision": "2743c634ca6489d5e763e0bf32bcf63b0daaaa1a",
+  "analysis_revision": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+  "changed_source_files": [
+    "README.md",
+    "docs/UI_DESIGN.md",
+    "kiker/static/app.css",
+    "kiker/static/app.js",
+    "kiker/static/index.html",
+    "tests/browser.mjs"
+  ],
+  "unit_tests_passed": 44,
+  "browser_checks_passed": 12,
+  "additional_ui_checks_passed": 5,
+  "new_gemini_calls": 0,
+  "unchanged_previous_evidence_files": 332,
+  "media_decode_passed": true,
+  "source_worktree_clean": true
+}

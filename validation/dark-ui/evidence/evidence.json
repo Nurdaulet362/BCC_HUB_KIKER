@@ -1,0 +1,63 @@
+{
+  "contract": "contract.md: dark KIKER workbench inspired by supplied screenshot; central text/file composer, persistent history, review, comparison; no backend changes.",
+  "targetViewports": [
+    "1440x1000",
+    "390x844"
+  ],
+  "accessibility": {
+    "status": "pass",
+    "evidence": "Browser keyboard file picker, visible focus, labelled controls, modal sidebar focus loop and Escape restoration verified. Main is inert while mobile drawer is open. Reduced motion removes spinner animation; sampled rendered text contrast >=4.5:1. Automated checks and screenshot review, not a screen-reader audit."
+  },
+  "responsive": {
+    "status": "pass",
+    "evidence": "Desktop and mobile screenshots inspected. No horizontal overflow at 390px or 320px, including long attachment names. Submit visible in first 390x844 viewport. Sidebar and report stack correctly."
+  },
+  "contentStates": {
+    "loading": {
+      "status": "pass",
+      "evidence": "Simulated server response: named stage, timer and return-to-new-review button remain visible; no model call. desktop-loading-simulated.png."
+    },
+    "empty": {
+      "status": "pass",
+      "evidence": "desktop-start.png and mobile-start.png show central composer, attachment and example action."
+    },
+    "error": {
+      "status": "pass",
+      "evidence": "Empty submission focuses input. Simulated service error retains text for retry. Invalid JSON import on mobile closes drawer so error remains visible."
+    },
+    "partial": {
+      "status": "pass",
+      "evidence": "Real saved official-2 report displays 1 rejected-record warning and 5 available findings; desktop-partial.png."
+    },
+    "success": {
+      "status": "pass",
+      "evidence": "Real saved January report imports with two quotes; analyst decision survives reload; downloaded raw report unchanged; corrected result zero; comparison 1 not repeated, 0 new."
+    },
+    "permission": {
+      "status": "not-applicable",
+      "reason": "Local app has no account or role permission screen. Native file picker and Gemini disclosure were checked; server authorization unchanged."
+    }
+  },
+  "renderedEvidence": [
+    {
+      "viewport": "1440x1000",
+      "artifact": "desktop-start.png",
+      "observation": "Centered composer and dark navigation match reference hierarchy without extra dashboard cards."
+    },
+    {
+      "viewport": "1440x1000",
+      "artifact": "desktop-partial.png",
+      "observation": "Report exposes rejected-record warning, actual source quotes and decisions; full-page capture from target viewport."
+    },
+    {
+      "viewport": "390x844",
+      "artifact": "mobile-start.png",
+      "observation": "Composer and primary action visible; sidebar hidden until explicitly opened."
+    },
+    {
+      "viewport": "390x844",
+      "artifact": "mobile-attachment.png",
+      "observation": "Long filename wraps within attachment, all composer controls fit."
+    }
+  ]
+}

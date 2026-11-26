@@ -1,0 +1,30 @@
+{
+  "recording": "automated walkthrough of real saved Gemini results; no human pilot",
+  "events": [
+    {
+      "name": "01-upload",
+      "start_seconds": 0.114511167,
+      "action_seconds": 0.11377525000000002
+    },
+    {
+      "name": "02-evidence",
+      "start_seconds": 19.274312167,
+      "action_seconds": 0.11615745799999785
+    },
+    {
+      "name": "03-decision",
+      "start_seconds": 38.906046792,
+      "action_seconds": 0.18336183300000267
+    },
+    {
+      "name": "04-comparison",
+      "start_seconds": 57.624236125,
+      "action_seconds": 0.33921933400000126
+    },
+    {
+      "name": "05-provenance",
+      "start_seconds": 76.941056209,
+      "action_seconds": 0.1272983749999985
+    }
+  ]
+}

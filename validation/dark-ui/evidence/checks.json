@@ -1,0 +1,56 @@
+{
+  "source": "automated browser checks; simulated loading/error explicitly labelled; no Gemini requests",
+  "checks": [
+    {
+      "name": "keyboard attachment picker, labelled submit and visible focus",
+      "passed": true
+    },
+    {
+      "name": "submission payload, loading, reduced motion, recoverable error with preserved input (simulated server)",
+      "passed": true
+    },
+    {
+      "name": "real saved report retains the rejected-record warning and five available findings",
+      "passed": true
+    },
+    {
+      "name": "sampled rendered text contrasts exceed 4.5:1",
+      "passed": true
+    },
+    {
+      "name": "mobile focus trap, long filenames, submit in viewport and 320px overflow check",
+      "passed": true
+    }
+  ],
+  "contrasts": [
+    {
+      "selector": ".topbar-caption",
+      "ratio": 5.156628508345205
+    },
+    {
+      "selector": ".sidebar .section-label",
+      "ratio": 6.920208606954433
+    },
+    {
+      "selector": ".history-item.active strong",
+      "ratio": 11.928590128047754
+    },
+    {
+      "selector": "#review-limitations",
+      "ratio": 7.276577801701197
+    },
+    {
+      "selector": ".tag.critical",
+      "ratio": 7.873851685867555
+    },
+    {
+      "selector": ".quote p",
+      "ratio": 11.513443711419884
+    },
+    {
+      "selector": ".primary",
+      "ratio": 14.769133058311741
+    }
+  ],
+  "errors": []
+}

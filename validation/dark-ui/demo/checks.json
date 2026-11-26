@@ -1,0 +1,18 @@
+{
+  "video": {
+    "seconds": 95.67766666666667,
+    "bytes": 2863841,
+    "sha256": "27952c91dd6ea3ed6fcb49d847363dcd18d0964c0e08375900a07fa29f4c7e7c",
+    "decode_check": true,
+    "video_codec": "h264",
+    "audio_codec": "aac"
+  },
+  "source": "automated recording of real saved Gemini results; generated Russian narration; no human pilot",
+  "analysis_revision": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+  "ui_revision": "2743c634ca6489d5e763e0bf32bcf63b0daaaa1a",
+  "ui_assets": {
+    "index.html": "d8ca7a81afa2e1e304e7b452a2e8687e888e28b9bc8c94d6066fac6f8bf09254",
+    "app.css": "f3826b3dd805e05665f3d8949ae29b0caf9d3c50511c1a7173503be52cf53f98",
+    "app.js": "d8df934a60b3a488545421deb6c8bae41186f138114159b569ec70ee97aa69cc"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "source": "demo operator decision; not a human pilot",
+  "analysis_revision": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+  "ui_revision": "2743c634ca6489d5e763e0bf32bcf63b0daaaa1a",
+  "decisions": {
+    "revision": 1,
+    "items": {
+      "D001": {
+        "decision": "accepted",
+        "note": "Учитывать покупку по дате совершения. Исправить ожидаемый месяц на январь."
+      }
+    },
+    "updated_at": "2026-11-26T17:55:49+05:00"
+  }
+}
