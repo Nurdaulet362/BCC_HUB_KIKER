@@ -1,0 +1,4 @@
+[
+  {"id":"state-encoding-clean","conflicts":[]},
+  {"id":"type-conflict","conflicts":[["REQ-1", "REQ-2"]]}
+]

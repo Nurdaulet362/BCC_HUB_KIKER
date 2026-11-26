@@ -43,13 +43,13 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--repeats', type=int, default=3, choices=range(1, 6))
     parser.add_argument('--baseline', action='store_true')
-    parser.add_argument('--suite', choices=('regression', 'holdout'), default='regression')
+    parser.add_argument('--suite', choices=('regression', 'holdout', 'schema'), default='regression')
     parser.add_argument('--trace', action='store_true', help='Save model responses locally for diagnosis')
     parser.add_argument('--case', action='append', help='Run only the selected case ID')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     root = Path(__file__).parent
-    suite_root = root / 'holdout' if args.suite == 'holdout' else root
+    suite_root = root / args.suite if args.suite != 'regression' else root
     cases = json.loads((suite_root / 'cases.json').read_text(encoding='utf-8'))
     if args.case:
         missing = set(args.case) - {case['id'] for case in cases}
@@ -62,7 +62,7 @@ def main():
     for mode in modes:
         for repeat in range(1, args.repeats + 1):
             for case in cases:
-                filename = (suite_root if args.suite == 'holdout' else root / 'cases') / f'{case["id"]}.md'
+                filename = (suite_root if args.suite != 'regression' else root / 'cases') / f'{case["id"]}.md'
                 document = read_document(filename)
                 client = Gemini()
                 if args.trace:
