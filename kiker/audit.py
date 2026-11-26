@@ -54,6 +54,12 @@ ENVIRONMENT = re.compile(r"\b(?:prod\w*|продакш\w*|промышлен\w*|
 ADDRESS = re.compile(r"\b(?:url|адрес\w*|домен\w*)\b", re.I)
 ADDRESS_METADATA = re.compile(r"^\|\s*\*{0,2}(?:request url|url type|swagger)\*{0,2}\s*\|", re.I)
 API_DETAIL = re.compile(r"\b(?:api|апи|rest|http|json|graphql|grpc|soap)\b", re.I)
+EMPTY_VALUE = re.compile(
+    r"\b(?:пуст\w*|незаполн\w*|empty|blank|null)\b|не\s+(?:заполн|передан)\w*|"
+    r"отсутств\w*\s+(?:значени|параметр|дат)\w*|без\s+(?:значени|параметр|дат)\w*", re.I,
+)
+INPUT_VALUE = re.compile(r"\b(?:поле|поля|полей|полях|полю|дат\w*|значени\w*|параметр\w*|ввод\w*|field|parameter|input|value)\b", re.I)
+OPTIONAL_VALUE = re.compile(r"\b(?:необязател\w*|опциональн\w*|optional|nullable)\b", re.I)
 INTERFACE_CONTEXT = re.compile(
     r"\b(?:api|апи|rest|https?|json|xml|graphql|grpc|soap|protobuf|url|endpoint|"
     r"get|post|put|patch|delete|эндпоинт\w*)\b|программн\w*\s+интерфейс|веб[- ]сервис",
@@ -473,12 +479,19 @@ def _grounded_design_detail(finding: Finding, source: dict[str, Block], title: s
     if finding.kind not in {"ambiguous", "gap", "unverifiable"}:
         return True
     evidence = [source[ref].text for ref in finding.sources]
+    claim = finding.description + " " + finding.question
+    context = [title, *(block.section + " " + block.text for block in source.values())]
+    # Missing/blank inputs are not an extra required use case unless the contract
+    # includes them. Explicit optional/empty-input rules keep such questions in scope.
+    if EMPTY_VALUE.search(claim) and INPUT_VALUE.search(claim) and not any(
+        EMPTY_VALUE.search(text) or OPTIONAL_VALUE.search(text) for text in context
+    ):
+        return False
     # A screen or a file export does not, by itself, require a network API.
     # Keep conflicts: a valid behavioural contradiction must not disappear just
     # because the model unnecessarily describes it with API terminology.
     if API_DETAIL.search(finding.description + " " + finding.question) and not any(
-        INTERFACE_CONTEXT.search(text) for text in
-        [title, *(block.section + " " + block.text for block in source.values())]
+        INTERFACE_CONTEXT.search(text) for text in context
     ):
         return False
     if ENVIRONMENT.search(finding.question) and ADDRESS.search(finding.question):

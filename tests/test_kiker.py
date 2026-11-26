@@ -172,6 +172,24 @@ class KikerTests(unittest.TestCase):
                            'Какой результат?', ('S001',), 'Проверка набора')
         self.assertTrue(_grounded_design_detail(conflict, source))
 
+    def test_blank_input_question_needs_a_blank_or_optional_input_contract(self):
+        document = read_document(source_file(self.directory,
+            '# Даты\n\nREQ-1. Экран принимает дату начала и дату окончания.\n'))
+        source = {b.id: b for b in document.blocks}
+        extra = Finding('gap', 'major', 'Нет правила валидации пустых значений даты.',
+                        'Что делать при пустых полях даты?', ('S001',), 'Отдельное требование')
+        self.assertFalse(_grounded_design_detail(extra, source))
+        for text in ['Дату окончания можно оставить пустой.', 'Дата окончания необязательна.']:
+            explicit = read_document(source_file(self.directory, '# Даты\n\nREQ-1. ' + text + '\n'))
+            self.assertTrue(_grounded_design_detail(extra, {b.id: b for b in explicit.blocks}))
+        # An unspecified ordering rule is not a missing input value.
+        ordering = Finding('gap', 'major', 'Отсутствует правило сравнения дат.',
+                           'Как сравнивать даты?', ('S001',), 'Отдельное требование')
+        self.assertTrue(_grounded_design_detail(ordering, source))
+        output = Finding('gap', 'major', 'Не описан пустой CSV-файл.',
+                         'Каким должен быть пустой CSV-файл?', ('S001',), 'Отдельное требование')
+        self.assertTrue(_grounded_design_detail(output, source))
+
     def test_blank_pdf_needs_text_layer(self):
         file = pdf_file(self.directory / "blank.pdf")
         with self.assertRaisesRegex(DocumentError, "извлекаемого текста"):
