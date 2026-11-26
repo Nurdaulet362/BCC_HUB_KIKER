@@ -1,0 +1,16 @@
+{
+  "actor": "automated demonstration; not a pilot participant",
+  "run_id": "55d498ed26ee4ea4bd71df3a40ef8084",
+  "source_revision": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+  "report_sha256": "0b8522e343f115931082326c394e27a4422c6f8e4401678ff57ac7fde30d551d",
+  "decisions": {
+    "revision": 1,
+    "items": {
+      "D001": {
+        "decision": "accepted",
+        "note": "Учитывать покупку по дате совершения. Исправить ожидаемый месяц на январь."
+      }
+    },
+    "updated_at": "2026-11-26T17:12:16+05:00"
+  }
+}

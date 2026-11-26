@@ -1,0 +1,54 @@
+[
+  {
+    "case": "initial-state-clean",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "5ca0a42bc0ffd98985962253f1180d203cd67a0eff2fe423161bf0e050542bc6",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 47.72,
+    "requests": 4,
+    "input_tokens": 6307,
+    "output_tokens": 4113,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      12.711,
+      2.39,
+      1.775,
+      2.707
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 12.711
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.39
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 1.775
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.707
+      }
+    ]
+  }
+]

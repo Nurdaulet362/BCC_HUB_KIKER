@@ -1,0 +1,42 @@
+{
+  "source": "automated browser check; no human participants",
+  "checks": [
+    {
+      "check": "empty input gives a focused, readable error",
+      "passed": true
+    },
+    {
+      "check": "saved real Gemini result imports with two source quotes",
+      "passed": true
+    },
+    {
+      "check": "analyst decision and comment persist across reload",
+      "passed": true
+    },
+    {
+      "check": "saving a decision works when its card leaves the active filter",
+      "passed": true
+    },
+    {
+      "check": "download keeps the generated report unchanged",
+      "passed": true
+    },
+    {
+      "check": "corrected document shows zero findings",
+      "passed": true
+    },
+    {
+      "check": "comparison distinguishes absent, matched and new findings",
+      "passed": true
+    },
+    {
+      "check": "390px layout has no horizontal overflow",
+      "passed": true
+    },
+    {
+      "check": "no browser script errors",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

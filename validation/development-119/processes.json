@@ -1,0 +1,18 @@
+[
+  {
+    "stage": "schema",
+    "exit_code": 0
+  },
+  {
+    "stage": "initial-state",
+    "exit_code": 0
+  },
+  {
+    "stage": "live-ui-1",
+    "exit_code": 0
+  },
+  {
+    "stage": "regression",
+    "exit_code": 1
+  }
+]

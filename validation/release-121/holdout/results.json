@@ -1,0 +1,510 @@
+[
+  {
+    "case": "year-boundary",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "c4fa01a2d6efc85097abf9de279f7a98ced167a5ca4f7cbd8d55471ebee878ba",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Противоречие между правилом определения месяца расходов и примером в таблице.",
+        "question": "Какой датой определяется месяц расходов: датой совершения покупки или датой проведения операции?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 39.94,
+    "requests": 4,
+    "input_tokens": 6168,
+    "output_tokens": 5873,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      3.451,
+      6.614,
+      5.065,
+      6.58,
+      7.914
+    ],
+    "attempt_events": [
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 1.446
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.614
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.065
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.58
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.914
+      }
+    ]
+  },
+  {
+    "case": "posting-clean",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "842cfefa13c34908da6e95871109a98c45a7dbedd412f51c36208e51488aec91",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 35.03,
+    "requests": 4,
+    "input_tokens": 6285,
+    "output_tokens": 6681,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      5.207,
+      6.811,
+      2.082,
+      11.005
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.207
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.811
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.082
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 11.005
+      }
+    ]
+  },
+  {
+    "case": "cash-exclusion",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "50228d7e34ba50088a6aad8cbabaa721fbbcae06699e99e69b3a788f1d73a540",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правило REQ-1 прямо запрещает учитывать снятие наличных в расходах, однако пример в таблице приёмки (S003) демонстрирует обратное поведение, включая снятие наличных в расчёт.",
+        "question": "Должно ли снятие наличных увеличивать сумму расходов, несмотря на прямое исключение в REQ-1?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 43.35,
+    "requests": 4,
+    "input_tokens": 6053,
+    "output_tokens": 2763,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 6,
+    "request_seconds": [
+      3.422,
+      6.385,
+      3.108,
+      2.133,
+      4.504,
+      3.338
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.422
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.385
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 1.102
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.133
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 2.499
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.338
+      }
+    ]
+  },
+  {
+    "case": "initial-state-clean",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "5ca0a42bc0ffd98985962253f1180d203cd67a0eff2fe423161bf0e050542bc6",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 29.52,
+    "requests": 4,
+    "input_tokens": 6307,
+    "output_tokens": 4113,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      10.601,
+      2.528,
+      1.957,
+      2.903
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 10.601
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.528
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 1.957
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.903
+      }
+    ]
+  },
+  {
+    "case": "csv-boundary",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "ae5651e44a22adc153680f6f91e95cabb9ec516abb0f6a1d41adcab180faae08",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Противоречие между текстовым правилом REQ-1 и примером в таблице приёмки относительно включения конечной даты периода в выгрузку.",
+        "question": "Должна ли выгрузка за период 4-5 сентября включать операции за 5 сентября?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 30.06,
+    "requests": 4,
+    "input_tokens": 6120,
+    "output_tokens": 3767,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      4.805,
+      10.577,
+      2.244,
+      3.47
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.805
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 10.577
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.244
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.47
+      }
+    ]
+  },
+  {
+    "case": "retry-clean",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "6ab4a160731456c247ea4f862d72d98e7653d7546a87c771f56efdf0d3db0e8b",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 42.28,
+    "requests": 4,
+    "input_tokens": 6405,
+    "output_tokens": 2709,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      11.614,
+      7.362,
+      4.693,
+      14.651
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 11.614
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.362
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.693
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 14.651
+      }
+    ]
+  },
+  {
+    "case": "unpaid-cancelled",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "0140153c96232c97685bee7e7d4d6fa74acf0936de6cbccfac4a43af1ddf1f7b",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Для отменённого счёта, который по определению является неоплаченным, правила REQ-1 и REQ-2 требуют отображения разных статусов.",
+        "question": "Какой статус должен отображаться для отменённого счёта: «Ожидает оплаты» или «Отменён»?",
+        "sources": [
+          "S001",
+          "S002"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 120.36,
+    "requests": 4,
+    "input_tokens": 6659,
+    "output_tokens": 4017,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      2.767,
+      55.887,
+      24.829,
+      27.805,
+      3.817
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.767
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 55.887
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 24.829
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 25.8
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.817
+      }
+    ]
+  },
+  {
+    "case": "limit-clean",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "597a64b3075e2d81603f0c2dba7b3658e72a4a8217892992b33d4c04c81bba5d",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "passed": false,
+    "error": "Gemini вернул HTTP 503.",
+    "seconds": 80.46,
+    "requests": 3,
+    "input_tokens": 4611,
+    "output_tokens": 7023,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 8,
+    "request_seconds": [
+      7.994,
+      25.501,
+      3.661,
+      9.596,
+      3.97,
+      7.873,
+      12.12,
+      1.223
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.994
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 25.501
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 1.655
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.596
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 1.967
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 4,
+        "seconds": 3.867
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 8,
+        "seconds": 4.115
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 0,
+        "seconds": 1.223
+      }
+    ]
+  }
+]

@@ -1,0 +1,118 @@
+[
+  {
+    "case": "clean-export",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "70cfc9622e2cf03f1ee54bd6eab68397c51db4ccddf0071dc613ef3da49f12bd",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 37.55,
+    "requests": 4,
+    "input_tokens": 6359,
+    "output_tokens": 6198,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      2.663,
+      3.616,
+      8.462,
+      9.927,
+      3.142
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.663
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 1.61
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 8.462
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.927
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.142
+      }
+    ]
+  },
+  {
+    "case": "clean-export",
+    "mode": "kiker",
+    "repeat": 2,
+    "source_sha256": "70cfc9622e2cf03f1ee54bd6eab68397c51db4ccddf0071dc613ef3da49f12bd",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 82.96,
+    "requests": 4,
+    "input_tokens": 6359,
+    "output_tokens": 6198,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      53.372,
+      4.5,
+      7.058,
+      10.358,
+      3.213
+    ],
+    "attempt_events": [
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 51.368
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.5
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.058
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 10.358
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.213
+      }
+    ]
+  }
+]

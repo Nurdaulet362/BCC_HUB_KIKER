@@ -1,0 +1,472 @@
+[
+  {
+    "case": "january-conflict",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "530e896574759c067dacabaac688df9e2dfd5392a82051426c1b190af7faa5e5",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Покупку совершили 31 января, а провели 1 февраля. По правилу месяц расходов — январь. Критерий приёмки увеличивает счётчик за другой месяц — февраль.",
+        "question": "Какую дату использовать для определения месяца расходов по этой покупке?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Сверка критериев приёмки"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 27.04,
+    "requests": 4,
+    "input_tokens": 6439,
+    "output_tokens": 4111,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      6.855,
+      6.811,
+      2.858,
+      3.018
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.855
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.811
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.858
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.018
+      }
+    ]
+  },
+  {
+    "case": "january-corrected",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "86f792faf603ff4b07048a538cec651b20a47d15ea91a2f84346bb892b35e7fa",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 38.63,
+    "requests": 4,
+    "input_tokens": 6463,
+    "output_tokens": 9275,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      12.097,
+      9.538,
+      4.355,
+      8.977
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 12.097
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.538
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.355
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 8.977
+      }
+    ]
+  },
+  {
+    "case": "posting-month",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "ddc46679522b3a78117a4076cd305dfc01ff48906651b31f9e3530fc4b9c5b37",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 31.74,
+    "requests": 4,
+    "input_tokens": 6429,
+    "output_tokens": 5907,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      5.92,
+      4.43,
+      4.171,
+      7.728
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.92
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.43
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.171
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.728
+      }
+    ]
+  },
+  {
+    "case": "transfer-conflict",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "7703b7844ab00a2255ef95378285d12f3b91726d8833a817a5772140b1ad2c80",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правило исключения переводов из расходов противоречит примеру в критериях приёмки, где перевод увеличивает счётчик расходов.",
+        "question": "Должны ли переводы учитываться в расходах?",
+        "sources": [
+          "S001",
+          "S004"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 43.34,
+    "requests": 4,
+    "input_tokens": 6434,
+    "output_tokens": 5119,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      6.588,
+      6.239,
+      9.811,
+      2.535,
+      9.516
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.588
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 4.237
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.811
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.535
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.516
+      }
+    ]
+  },
+  {
+    "case": "paraphrased-conflict",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "ee01fbcc7d34ca4fe58cd3bfa71a7d912c1d5f6ebd152e029f8ff7dfca670e51",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Критерий приёмки S004 противоречит правилу REQ-1, так как использует дату подтверждения от процессинга для определения календарного периода, что прямо запрещено.",
+        "question": "В какой календарный период должна быть включена оплата, совершенная 30 ноября, если подтверждение от процессинга поступило 2 декабря?",
+        "sources": [
+          "S001",
+          "S004"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 31.03,
+    "requests": 4,
+    "input_tokens": 6448,
+    "output_tokens": 6065,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      11.48,
+      6.814,
+      3.292,
+      3.538
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 11.48
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.814
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.292
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.538
+      }
+    ]
+  },
+  {
+    "case": "clean-export",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "70cfc9622e2cf03f1ee54bd6eab68397c51db4ccddf0071dc613ef3da49f12bd",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 30.38,
+    "requests": 4,
+    "input_tokens": 6359,
+    "output_tokens": 6198,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      2.418,
+      7.224,
+      10.534,
+      3.826
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.418
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.224
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 10.534
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.826
+      }
+    ]
+  },
+  {
+    "case": "clean-receipt",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "52123a40af922b284bbb3ce0df50c56c4bcbba3deef156810abd3d0bc5608875",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 120.01,
+    "requests": 4,
+    "input_tokens": 6461,
+    "output_tokens": 2246,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      4.294,
+      92.279,
+      6.413,
+      4.449,
+      3.717
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.294
+      },
+      {
+        "outcome": "network_timeout",
+        "retry_delay_seconds": 2,
+        "seconds": 90.277
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.413
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.449
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.717
+      }
+    ]
+  },
+  {
+    "case": "idempotency-conflict",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "60adca20819144d1b47200bba0853e48da79f3e939bc71224d89fd509ccfe922",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правила REQ-1 и REQ-2 содержат несовместимые требования к обработке повторных заявок с одинаковым идентификатором операции.",
+        "question": "Какое поведение должен реализовать сервис при получении повторной заявки с тем же идентификатором операции: возвращать номер первой заявки или создавать новую?",
+        "sources": [
+          "S001",
+          "S002"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 20.08,
+    "requests": 3,
+    "input_tokens": 4729,
+    "output_tokens": 3209,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 3,
+    "request_seconds": [
+      6.036,
+      5.096,
+      4.066
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.036
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.096
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.066
+      }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "check": "empty input",
+    "exit_code": 1,
+    "existing_files_preserved": true,
+    "revision": "7586453a0ede81d105e073bb89f64422abe5130e"
+  },
+  {
+    "check": "same paths",
+    "exit_code": 1,
+    "existing_files_preserved": true,
+    "revision": "7586453a0ede81d105e073bb89f64422abe5130e"
+  },
+  {
+    "check": "wrong suffix",
+    "exit_code": 1,
+    "existing_files_preserved": true,
+    "revision": "7586453a0ede81d105e073bb89f64422abe5130e"
+  }
+]

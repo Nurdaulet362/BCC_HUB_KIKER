@@ -1,0 +1,101 @@
+{
+  "code_revision": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+  "regression_kiker": {
+    "attempted": 8,
+    "passed": 8,
+    "transport_failures": 0,
+    "semantic_failures": 0,
+    "unexpected_findings": 0,
+    "missed_conflicts": 0,
+    "requests": 31,
+    "attempts": 33,
+    "input_tokens": 49762,
+    "output_tokens": 42130,
+    "median_seconds": 31.38
+  },
+  "regression_baseline": {
+    "attempted": 8,
+    "passed": 3,
+    "transport_failures": 0,
+    "semantic_failures": 5,
+    "unexpected_findings": 8,
+    "missed_conflicts": 0,
+    "requests": 8,
+    "attempts": 8,
+    "input_tokens": 9604,
+    "output_tokens": 3889,
+    "median_seconds": 2.86
+  },
+  "holdout": {
+    "attempted": 8,
+    "passed": 7,
+    "transport_failures": 1,
+    "semantic_failures": 0,
+    "unexpected_findings": 0,
+    "missed_conflicts": 0,
+    "requests": 31,
+    "attempts": 40,
+    "input_tokens": 48608,
+    "output_tokens": 36946,
+    "median_seconds": 41.11
+  },
+  "schema": {
+    "attempted": 2,
+    "passed": 2,
+    "transport_failures": 0,
+    "semantic_failures": 0,
+    "unexpected_findings": 0,
+    "missed_conflicts": 0,
+    "requests": 7,
+    "attempts": 7,
+    "input_tokens": 10956,
+    "output_tokens": 4423,
+    "median_seconds": 42.25
+  },
+  "repeat": {
+    "attempted": 2,
+    "passed": 2,
+    "transport_failures": 0,
+    "semantic_failures": 0,
+    "unexpected_findings": 0,
+    "missed_conflicts": 0,
+    "requests": 8,
+    "attempts": 10,
+    "input_tokens": 12902,
+    "output_tokens": 13386,
+    "median_seconds": 120.27
+  },
+  "export-repeat": {
+    "attempted": 2,
+    "passed": 2,
+    "transport_failures": 0,
+    "semantic_failures": 0,
+    "unexpected_findings": 0,
+    "missed_conflicts": 0,
+    "requests": 8,
+    "attempts": 10,
+    "input_tokens": 12718,
+    "output_tokens": 12396,
+    "median_seconds": 60.25
+  },
+  "holdout-retry": {
+    "attempted": 1,
+    "passed": 1,
+    "transport_failures": 0,
+    "semantic_failures": 0,
+    "unexpected_findings": 0,
+    "missed_conflicts": 0,
+    "requests": 4,
+    "attempts": 5,
+    "input_tokens": 6727,
+    "output_tokens": 10372,
+    "median_seconds": 45.38
+  },
+  "benchmark_coverage": {
+    "distinct_cases_completed": 18,
+    "planned_distinct_cases": 18,
+    "attempts": 19,
+    "successful_attempts": 18,
+    "api_failures": 1
+  }
+}

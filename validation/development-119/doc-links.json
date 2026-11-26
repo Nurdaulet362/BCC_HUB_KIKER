@@ -1,0 +1,52 @@
+[
+  {
+    "source": "README.md",
+    "target": "docs/PILOT.md",
+    "exists": true
+  },
+  {
+    "source": "README.md",
+    "target": "docs/ARCHITECTURE.md",
+    "exists": true
+  },
+  {
+    "source": "README.md",
+    "target": "evals/README.md",
+    "exists": true
+  },
+  {
+    "source": "README.md",
+    "target": "docs/READINESS.md",
+    "exists": true
+  },
+  {
+    "source": "docs/ARCHITECTURE.md",
+    "target": "../kiker/audit.py",
+    "exists": true
+  },
+  {
+    "source": "docs/ARCHITECTURE.md",
+    "target": "../kiker/acceptance.py",
+    "exists": true
+  },
+  {
+    "source": "docs/ARCHITECTURE.md",
+    "target": "../kiker/web.py",
+    "exists": true
+  },
+  {
+    "source": "docs/ARCHITECTURE.md",
+    "target": "../kiker/snapshot.py",
+    "exists": true
+  },
+  {
+    "source": "docs/ARCHITECTURE.md",
+    "target": "PILOT.md",
+    "exists": true
+  },
+  {
+    "source": "docs/ARCHITECTURE.md",
+    "target": "../evals/README.md",
+    "exists": true
+  }
+]

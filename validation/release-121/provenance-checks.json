@@ -1,0 +1,102 @@
+[
+  {
+    "file": "regression/kiker-january-conflict-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "regression/kiker-january-corrected-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "regression/kiker-posting-month-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "regression/kiker-transfer-conflict-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "regression/kiker-paraphrased-conflict-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "regression/kiker-clean-export-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "regression/kiker-clean-receipt-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "regression/kiker-idempotency-conflict-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "holdout/kiker-year-boundary-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "holdout/kiker-posting-clean-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "holdout/kiker-cash-exclusion-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "holdout/kiker-initial-state-clean-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "holdout/kiker-csv-boundary-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "holdout/kiker-retry-clean-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "holdout/kiker-unpaid-cancelled-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "repeat/kiker-january-conflict-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "repeat/kiker-january-corrected-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "schema/kiker-state-encoding-clean-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "schema/kiker-type-conflict-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "export-repeat/kiker-clean-export-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "export-repeat/kiker-clean-export-2.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "holdout-retry/kiker-limit-clean-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "official-2.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "pdf-report.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "live-ui/report.md",
+    "source_and_report_verified": true
+  }
+]

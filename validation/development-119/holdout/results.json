@@ -1,0 +1,66 @@
+[
+  {
+    "case": "year-boundary",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "c4fa01a2d6efc85097abf9de279f7a98ced167a5ca4f7cbd8d55471ebee878ba",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Противоречие между правилом определения месяца расходов и примером в таблице.",
+        "question": "Какой датой определяется месяц расходов: датой совершения покупки или датой проведения операции?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 63.0,
+    "requests": 4,
+    "input_tokens": 6168,
+    "output_tokens": 5873,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      9.509,
+      6.013,
+      10.222,
+      17.983
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.509
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.013
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 10.222
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 17.983
+      }
+    ]
+  }
+]

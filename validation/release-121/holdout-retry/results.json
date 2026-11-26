@@ -1,0 +1,60 @@
+[
+  {
+    "case": "limit-clean",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "597a64b3075e2d81603f0c2dba7b3658e72a4a8217892992b33d4c04c81bba5d",
+    "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 8.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 45.38,
+    "requests": 4,
+    "input_tokens": 6727,
+    "output_tokens": 10372,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      6.688,
+      6.432,
+      10.402,
+      9.408,
+      9.555
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.688
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.432
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 8.4
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.408
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.555
+      }
+    ]
+  }
+]

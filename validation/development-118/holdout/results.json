@@ -1,0 +1,264 @@
+[
+  {
+    "case": "year-boundary",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "c4fa01a2d6efc85097abf9de279f7a98ced167a5ca4f7cbd8d55471ebee878ba",
+    "version": "7586453a0ede81d105e073bb89f64422abe5130e",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правило определения месяца расходов противоречит примеру приёмки.",
+        "question": "Какой датой (совершения или проведения) определяется месяц расходов?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 85.24,
+    "requests": 4,
+    "input_tokens": 5103,
+    "output_tokens": 3599,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      19.401,
+      5.258,
+      2.286,
+      28.842,
+      6.976
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 19.401
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.258
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.286
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 26.837
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.976
+      }
+    ]
+  },
+  {
+    "case": "posting-clean",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "842cfefa13c34908da6e95871109a98c45a7dbedd412f51c36208e51488aec91",
+    "version": "7586453a0ede81d105e073bb89f64422abe5130e",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 80.54,
+    "requests": 4,
+    "input_tokens": 5189,
+    "output_tokens": 1577,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      2.911,
+      27.066,
+      32.733,
+      5.714
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.911
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 27.066
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 32.734
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.714
+      }
+    ]
+  },
+  {
+    "case": "cash-exclusion",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "50228d7e34ba50088a6aad8cbabaa721fbbcae06699e99e69b3a788f1d73a540",
+    "version": "7586453a0ede81d105e073bb89f64422abe5130e",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правило в S001 прямо противоречит примеру в S003: текст утверждает, что снятие наличных исключается из расходов, но пример показывает увеличение суммы расходов при снятии наличных.",
+        "question": "Должно ли снятие наличных увеличивать сумму расходов?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 122.78,
+    "requests": 4,
+    "input_tokens": 4951,
+    "output_tokens": 1749,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      2.243,
+      73.933,
+      2.607,
+      2.325,
+      3.821
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.243
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 71.927
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.607
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.325
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.821
+      }
+    ]
+  },
+  {
+    "case": "initial-state-clean",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "5ca0a42bc0ffd98985962253f1180d203cd67a0eff2fe423161bf0e050542bc6",
+    "version": "7586453a0ede81d105e073bb89f64422abe5130e",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "holdout",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 1,
+    "passed": false,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "major",
+        "description": "В ТЗ есть противоречие в определении типа данных для поля enabled: REQ-2 явно задает его как целое число (0 или 1), в то время как REQ-1 описывает его как логическое состояние (выключено/включено), что создает неопределенность при реализации API.",
+        "question": "Какой тип данных должен быть у поля enabled: целое число (integer) или логический тип (boolean)?",
+        "sources": [
+          "S001",
+          "S002"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 82.64,
+    "requests": 4,
+    "input_tokens": 5272,
+    "output_tokens": 1674,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      2.345,
+      2.399,
+      33.323,
+      2.297,
+      4.292
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.346
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.399
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 31.318
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.297
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.292
+      }
+    ]
+  }
+]

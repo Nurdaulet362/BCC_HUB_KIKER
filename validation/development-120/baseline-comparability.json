@@ -1,0 +1,10 @@
+{
+  "baseline_revision": "287319302afc601ecd5f24b1d4358049891d9747",
+  "candidate_revision": "ed0af63ab5559e77cc6f11334d35a0f15c78e95c",
+  "same_system_prompt": true,
+  "system_prompt_sha256": "39ce2dead62a053412522f3e2d6bdf661c3f7420233f0d4ad462c8d1a417da36",
+  "model": "gemini-3.1-flash-lite",
+  "thinking_level": "LOW",
+  "temperature": 0,
+  "interval_note": "baseline has one request per document; its 15-second inter-request interval does not delay any of the eight baseline cases (each completed in one attempt)"
+}

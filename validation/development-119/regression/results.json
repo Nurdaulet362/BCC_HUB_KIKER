@@ -1,0 +1,913 @@
+[
+  {
+    "case": "january-conflict",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "530e896574759c067dacabaac688df9e2dfd5392a82051426c1b190af7faa5e5",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Покупку совершили 31 января, а провели 1 февраля. По правилу месяц расходов — январь. Критерий приёмки увеличивает счётчик за другой месяц — февраль.",
+        "question": "Какую дату использовать для определения месяца расходов по этой покупке?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Сверка критериев приёмки"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 50.29,
+    "requests": 4,
+    "input_tokens": 6439,
+    "output_tokens": 4111,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      5.941,
+      10.939,
+      5.388,
+      5.266
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.941
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 10.939
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.388
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.266
+      }
+    ]
+  },
+  {
+    "case": "january-corrected",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "86f792faf603ff4b07048a538cec651b20a47d15ea91a2f84346bb892b35e7fa",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 162.07,
+    "requests": 4,
+    "input_tokens": 6463,
+    "output_tokens": 9275,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 6,
+    "request_seconds": [
+      92.277,
+      12.993,
+      7.899,
+      9.414,
+      3.766,
+      9.77
+    ],
+    "attempt_events": [
+      {
+        "outcome": "network_timeout",
+        "retry_delay_seconds": 2,
+        "seconds": 90.272
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 12.993
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 5.893
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.414
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.766
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.77
+      }
+    ]
+  },
+  {
+    "case": "posting-month",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "ddc46679522b3a78117a4076cd305dfc01ff48906651b31f9e3530fc4b9c5b37",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 96.22,
+    "requests": 4,
+    "input_tokens": 6429,
+    "output_tokens": 5907,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      7.648,
+      7.859,
+      3.057,
+      51.199
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.648
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.859
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.057
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 51.199
+      }
+    ]
+  },
+  {
+    "case": "transfer-conflict",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "7703b7844ab00a2255ef95378285d12f3b91726d8833a817a5772140b1ad2c80",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правило исключения переводов из расходов противоречит примеру в критериях приёмки, где перевод увеличивает счётчик расходов.",
+        "question": "Должны ли переводы учитываться в расходах?",
+        "sources": [
+          "S001",
+          "S004"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 48.37,
+    "requests": 4,
+    "input_tokens": 6434,
+    "output_tokens": 5119,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      5.039,
+      6.731,
+      5.348,
+      3.352
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.039
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.731
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.348
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.352
+      }
+    ]
+  },
+  {
+    "case": "paraphrased-conflict",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "ee01fbcc7d34ca4fe58cd3bfa71a7d912c1d5f6ebd152e029f8ff7dfca670e51",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Критерий приёмки S004 противоречит правилу REQ-1, так как использует дату подтверждения от процессинга для определения календарного периода, что прямо запрещено.",
+        "question": "В какой календарный период должна быть включена оплата, совершенная 30 ноября, если подтверждение от процессинга поступило 2 декабря?",
+        "sources": [
+          "S001",
+          "S004"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 60.83,
+    "requests": 4,
+    "input_tokens": 6448,
+    "output_tokens": 6065,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      19.493,
+      7.966,
+      7.695,
+      11.314
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 19.493
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.966
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.695
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 11.314
+      }
+    ]
+  },
+  {
+    "case": "clean-export",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "70cfc9622e2cf03f1ee54bd6eab68397c51db4ccddf0071dc613ef3da49f12bd",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 1,
+    "passed": false,
+    "findings": [
+      {
+        "kind": "gap",
+        "severity": "major",
+        "description": "Отсутствует спецификация формата даты для API.",
+        "question": "В каком формате (строка, ISO-8601, timestamp) должны передаваться даты начала и окончания?",
+        "sources": [
+          "S001"
+        ],
+        "scope": "Отдельное требование"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 72.8,
+    "requests": 4,
+    "input_tokens": 6478,
+    "output_tokens": 9865,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      4.345,
+      5.519,
+      7.666,
+      9.965,
+      12.775
+    ],
+    "attempt_events": [
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 2.34
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.519
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 7.666
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 9.965
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 12.775
+      }
+    ]
+  },
+  {
+    "case": "clean-receipt",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "52123a40af922b284bbb3ce0df50c56c4bcbba3deef156810abd3d0bc5608875",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 78.44,
+    "requests": 4,
+    "input_tokens": 6461,
+    "output_tokens": 2246,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 5,
+    "request_seconds": [
+      4.858,
+      6.797,
+      30.664,
+      2.139,
+      2.755
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.858
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.797
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 28.659
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.139
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.755
+      }
+    ]
+  },
+  {
+    "case": "idempotency-conflict",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "60adca20819144d1b47200bba0853e48da79f3e939bc71224d89fd509ccfe922",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правила REQ-1 и REQ-2 содержат несовместимые требования к обработке повторных заявок с одинаковым идентификатором операции.",
+        "question": "Какое поведение должен реализовать сервис при получении повторной заявки с тем же идентификатором операции: возвращать номер первой заявки или создавать новую?",
+        "sources": [
+          "S001",
+          "S002"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 58.03,
+    "requests": 3,
+    "input_tokens": 4729,
+    "output_tokens": 3209,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      4.31,
+      21.294,
+      3.74,
+      6.718
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.31
+      },
+      {
+        "outcome": "HTTP 503",
+        "retry_delay_seconds": 2,
+        "seconds": 19.29
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.74
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 6.718
+      }
+    ]
+  },
+  {
+    "case": "january-conflict",
+    "mode": "baseline",
+    "repeat": 1,
+    "source_sha256": "530e896574759c067dacabaac688df9e2dfd5392a82051426c1b190af7faa5e5",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "major",
+        "description": "Правило REQ-1 определяет месяц по дате совершения покупки, однако пример в критериях приёмки S003 указывает, что покупка, совершённая 31 января, учитывается в февральском счётчике из-за времени проведения операции, что противоречит определению месяца по дате совершения покупки.",
+        "question": "Должен ли месяц определяться по дате совершения покупки, как указано в правиле, или по дате проведения операции, как показано в примере с покупкой 31 января?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Один запрос"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 2.6,
+    "requests": 1,
+    "input_tokens": 1215,
+    "output_tokens": 336,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 1,
+    "request_seconds": [
+      2.594
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.594
+      }
+    ]
+  },
+  {
+    "case": "january-corrected",
+    "mode": "baseline",
+    "repeat": 1,
+    "source_sha256": "86f792faf603ff4b07048a538cec651b20a47d15ea91a2f84346bb892b35e7fa",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 2,
+    "passed": false,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правило REQ-1 определяет месяц по дате совершения покупки, однако пример в S003 показывает, что покупка, совершенная 31 января, увеличивает январский счетчик, даже если она проводится 1 февраля. Это противоречит логике учета по дате совершения, если под 'проведенными покупками' подразумевается дата проведения операции.",
+        "question": "Должен ли месяц определяться по дате совершения покупки или по дате проведения операции в системе?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Один запрос"
+      },
+      {
+        "kind": "ambiguous",
+        "severity": "major",
+        "description": "В правиле REQ-1 указано, что переводы исключаются из расходов, но в примере S004 действие 'Перевести 500 ₸' приводится в контексте проверки счетчика расходов, что создает двусмысленность относительно того, влияет ли перевод на счетчик или нет.",
+        "question": "Является ли перевод в примере S004 операцией, которая должна была изменить счетчик, или это пример операции, которая корректно не изменила счетчик согласно правилу исключения переводов?",
+        "sources": [
+          "S001",
+          "S004"
+        ],
+        "scope": "Один запрос"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 2.85,
+    "requests": 1,
+    "input_tokens": 1214,
+    "output_tokens": 460,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 1,
+    "request_seconds": [
+      2.846
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.846
+      }
+    ]
+  },
+  {
+    "case": "posting-month",
+    "mode": "baseline",
+    "repeat": 1,
+    "source_sha256": "ddc46679522b3a78117a4076cd305dfc01ff48906651b31f9e3530fc4b9c5b37",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 2,
+    "passed": false,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "major",
+        "description": "Правило REQ-1 определяет месяц по дате проведения покупки, однако пример в S003 показывает, что месяц определяется по дате проведения операции (1 февраля), а не по дате совершения покупки (31 января).",
+        "question": "Должен ли месяц в счетчике расходов определяться по фактической дате совершения покупки или по дате проведения транзакции в системе?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Один запрос"
+      },
+      {
+        "kind": "gap",
+        "severity": "minor",
+        "description": "В правиле REQ-1 указано, что переводы исключаются из расходов, но в примере S004 не уточняется, является ли перевод 500 ₸ переводом на другой счет или оплатой товара, что делает критерий проверки неоднозначным.",
+        "question": "Является ли перевод 500 тенге в примере переводом на другой счет, который должен быть исключен из расходов, или это оплата товара, которая должна учитываться?",
+        "sources": [
+          "S001",
+          "S004"
+        ],
+        "scope": "Один запрос"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 2.56,
+    "requests": 1,
+    "input_tokens": 1214,
+    "output_tokens": 435,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 1,
+    "request_seconds": [
+      2.555
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.555
+      }
+    ]
+  },
+  {
+    "case": "transfer-conflict",
+    "mode": "baseline",
+    "repeat": 1,
+    "source_sha256": "7703b7844ab00a2255ef95378285d12f3b91726d8833a817a5772140b1ad2c80",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 1,
+    "passed": false,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правило REQ-1 прямо запрещает учитывать переводы в расходах, однако критерий приёмки S004 требует, чтобы перевод на 500 ₸ увеличил счётчик расходов.",
+        "question": "Должны ли переводы всё-таки учитываться в расходах, несмотря на явный запрет в правиле REQ-1?",
+        "sources": [
+          "S001",
+          "S004"
+        ],
+        "scope": "Один запрос"
+      },
+      {
+        "kind": "ambiguous",
+        "severity": "major",
+        "description": "Правило REQ-1 определяет месяц по дате совершения покупки, но критерий S003 ожидает, что покупка, совершённая 31 января, но проведённая 1 февраля, попадёт в январский счётчик, что противоречит логике учёта по дате совершения.",
+        "question": "По какому именно событию (дата совершения покупки или дата проведения операции) должен определяться месяц для счётчика расходов?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Один запрос"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 2.42,
+    "requests": 1,
+    "input_tokens": 1214,
+    "output_tokens": 419,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 1,
+    "request_seconds": [
+      2.408
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.408
+      }
+    ]
+  },
+  {
+    "case": "paraphrased-conflict",
+    "mode": "baseline",
+    "repeat": 1,
+    "source_sha256": "ee01fbcc7d34ca4fe58cd3bfa71a7d912c1d5f6ebd152e029f8ff7dfca670e51",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правило REQ-1 устанавливает, что период оплаты определяется датой платежа, а дата подтверждения не влияет на результат. Однако критерий приемки S004 относит платеж от 30 ноября к декабрьскому итогу из-за даты подтверждения 2 декабря, что противоречит правилу.",
+        "question": "Должна ли система относить оплату к периоду по дате совершения платежа, как указано в правиле REQ-1, или по дате получения подтверждения от процессинга, как показано в примере с ноябрьским платежом?",
+        "sources": [
+          "S001",
+          "S004"
+        ],
+        "scope": "Один запрос"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 4.95,
+    "requests": 1,
+    "input_tokens": 1221,
+    "output_tokens": 1323,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 1,
+    "request_seconds": [
+      4.938
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 4.938
+      }
+    ]
+  },
+  {
+    "case": "clean-export",
+    "mode": "baseline",
+    "repeat": 1,
+    "source_sha256": "70cfc9622e2cf03f1ee54bd6eab68397c51db4ccddf0071dc613ef3da49f12bd",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 2,
+    "passed": false,
+    "findings": [
+      {
+        "kind": "gap",
+        "severity": "major",
+        "description": "В требованиях не указано поведение системы, если дата начала или дата окончания не выбраны (пустые значения), хотя экран выгрузки принимает эти параметры.",
+        "question": "Какое поведение системы ожидается, если пользователь не заполнил одно или оба поля даты перед отправкой запроса?",
+        "sources": [
+          "S001",
+          "S003"
+        ],
+        "scope": "Один запрос"
+      },
+      {
+        "kind": "ambiguous",
+        "severity": "minor",
+        "description": "Не определен формат данных для колонки 'amount' (например, разделитель дробной части, наличие валюты или только число).",
+        "question": "В каком формате и с какой точностью необходимо выводить числовые значения в колонке amount?",
+        "sources": [
+          "S003"
+        ],
+        "scope": "Один запрос"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 2.87,
+    "requests": 1,
+    "input_tokens": 1212,
+    "output_tokens": 357,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 1,
+    "request_seconds": [
+      2.862
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.862
+      }
+    ]
+  },
+  {
+    "case": "clean-receipt",
+    "mode": "baseline",
+    "repeat": 1,
+    "source_sha256": "52123a40af922b284bbb3ce0df50c56c4bcbba3deef156810abd3d0bc5608875",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 1,
+    "passed": false,
+    "findings": [
+      {
+        "kind": "gap",
+        "severity": "major",
+        "description": "В требованиях не определено поведение системы для заказов, которые были отменены или по которым произошел сбой оплаты, так как описаны только состояния «оплачен» и «не оплачен».",
+        "question": "Какое состояние экрана и доступность квитанции должны быть для заказов, которые были отменены или по которым произошел сбой оплаты?",
+        "sources": [
+          "S001",
+          "S002",
+          "S003"
+        ],
+        "scope": "Один запрос"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 3.25,
+    "requests": 1,
+    "input_tokens": 1228,
+    "output_tokens": 264,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 1,
+    "request_seconds": [
+      3.246
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.246
+      }
+    ]
+  },
+  {
+    "case": "idempotency-conflict",
+    "mode": "baseline",
+    "repeat": 1,
+    "source_sha256": "60adca20819144d1b47200bba0853e48da79f3e939bc71224d89fd509ccfe922",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "regression",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "Правила REQ-1 и REQ-2 противоречат друг другу: первое требует возвращать номер уже существующей заявки при совпадении идентификатора операции, а второе требует создавать новую заявку и возвращать её номер в той же ситуации.",
+        "question": "Какое поведение системы должно быть реализовано при получении повторной заявки с тем же идентификатором операции: возврат номера старой заявки или создание новой?",
+        "sources": [
+          "S001",
+          "S002"
+        ],
+        "scope": "Один запрос"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 5.54,
+    "requests": 1,
+    "input_tokens": 1086,
+    "output_tokens": 295,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 1,
+    "request_seconds": [
+      5.534
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 5.535
+      }
+    ]
+  }
+]

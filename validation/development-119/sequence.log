@@ -1,0 +1,9 @@
+START schema
+FINISH schema 0
+START initial-state
+FINISH initial-state 0
+START live-ui-1
+FINISH live-ui-1 0
+START regression
+FINISH regression 1
+START holdout

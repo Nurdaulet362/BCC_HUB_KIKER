@@ -1,0 +1,16 @@
+kiker 1 january-conflict: PASS 50.29s
+kiker 1 january-corrected: PASS 162.07s
+kiker 1 posting-month: PASS 96.22s
+kiker 1 transfer-conflict: PASS 48.37s
+kiker 1 paraphrased-conflict: PASS 60.83s
+kiker 1 clean-export: FAIL 72.8s
+kiker 1 clean-receipt: PASS 78.44s
+kiker 1 idempotency-conflict: PASS 58.03s
+baseline 1 january-conflict: PASS 2.6s
+baseline 1 january-corrected: FAIL 2.85s
+baseline 1 posting-month: FAIL 2.56s
+baseline 1 transfer-conflict: FAIL 2.42s
+baseline 1 paraphrased-conflict: PASS 4.95s
+baseline 1 clean-export: FAIL 2.87s
+baseline 1 clean-receipt: FAIL 3.25s
+baseline 1 idempotency-conflict: PASS 5.54s

@@ -1,0 +1,10 @@
+{
+  "status": "superseded after complete 8-case regression and 8 baseline cases",
+  "finding": "clean-export invented an API contract; add a deterministic scope guard",
+  "holdout": "interrupted at start; not a completed evaluation",
+  "not_started": [
+    "repeat",
+    "official-2",
+    "pdf"
+  ]
+}

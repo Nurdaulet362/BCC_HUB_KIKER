@@ -1,0 +1,118 @@
+[
+  {
+    "case": "state-encoding-clean",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "2b0bebd872db03ddb8f7b8650611eb3cbcbfbb36fd7d6a9433cf60f904c6e4af",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "schema",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 0,
+    "found_conflicts": 0,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [],
+    "rejected": 0,
+    "seconds": 47.5,
+    "requests": 4,
+    "input_tokens": 6162,
+    "output_tokens": 2271,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      2.062,
+      14.361,
+      2.377,
+      2.492
+    ],
+    "attempt_events": [
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.062
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 14.361
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.377
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.492
+      }
+    ]
+  },
+  {
+    "case": "type-conflict",
+    "mode": "kiker",
+    "repeat": 1,
+    "source_sha256": "ef25795dc73f2153f284d863eb45020c3e1ea3fc2e5870f67b5213d7cff204a1",
+    "version": "287319302afc601ecd5f24b1d4358049891d9747",
+    "model": "gemini-3.1-flash-lite",
+    "suite": "schema",
+    "thinking_level": "LOW",
+    "timeout": 90.0,
+    "request_interval": 15.0,
+    "expected_conflicts": 1,
+    "found_conflicts": 1,
+    "unexpected_findings": 0,
+    "passed": true,
+    "findings": [
+      {
+        "kind": "conflict",
+        "severity": "critical",
+        "description": "В спецификации API для GET /preferences поле 'enabled' одновременно определено как integer и как boolean.",
+        "question": "Какой тип данных должен быть у поля 'enabled' в ответе GET /preferences?",
+        "sources": [
+          "S001",
+          "S002"
+        ],
+        "scope": "Проверка набора требований"
+      }
+    ],
+    "rejected": 0,
+    "seconds": 165.13,
+    "requests": 3,
+    "input_tokens": 4794,
+    "output_tokens": 2152,
+    "model_version": "gemini-3.1-flash-lite",
+    "attempts": 4,
+    "request_seconds": [
+      92.343,
+      2.214,
+      3.33,
+      42.771
+    ],
+    "attempt_events": [
+      {
+        "outcome": "network_timeout",
+        "retry_delay_seconds": 2,
+        "seconds": 90.338
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 2.214
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 3.33
+      },
+      {
+        "outcome": "ok",
+        "retry_delay_seconds": 0,
+        "seconds": 42.771
+      }
+    ]
+  }
+]

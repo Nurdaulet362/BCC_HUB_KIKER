@@ -1,0 +1,18 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Gemini вернул HTTP 503.
+
+false !== true
+
+    at file:///Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/browser-tools/live-review.mjs:18:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.13.0

@@ -1,0 +1,91 @@
+[
+  {
+    "stage": "analysis",
+    "response": {
+      "requirements": [
+        "S001",
+        "S002",
+        "S003"
+      ],
+      "issues": [
+        {
+          "kind": "ambiguous",
+          "severity": "critical",
+          "sources": [
+            "S001"
+          ],
+          "description": "В требованиях S001 и S002 содержатся противоречивые указания относительно типа данных для поля enabled в ответе GET /preferences: в одном случае требуется integer, в другом — boolean.",
+          "question": "Какой тип данных должен быть у поля enabled в ответе GET /preferences: целое число или логическое значение?"
+        }
+      ]
+    }
+  },
+  {
+    "stage": "analysis",
+    "response": {
+      "issues": [
+        {
+          "kind": "conflict",
+          "severity": "critical",
+          "sources": [
+            "S001",
+            "S002"
+          ],
+          "description": "Поле enabled в ответе GET /preferences одновременно определено как integer (0/1) и как boolean (true/false), что делает невозможным однозначную реализацию контракта.",
+          "question": "Какой тип данных (integer или boolean) должен использоваться для поля enabled в ответе GET /preferences?"
+        }
+      ]
+    }
+  },
+  {
+    "stage": "verification",
+    "response": {
+      "checks": [
+        {
+          "id": "C001",
+          "required_action_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип integer: 0 — выключено, 1 — включено.",
+          "scenario_basis_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип integer: 0 — выключено, 1 — включено.",
+          "requires_unstated_assumption": false,
+          "strongest_counterevidence_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип boolean: false — выключено, true — включено.",
+          "outcome_a": "Поле enabled должно быть типа integer (0 или 1).",
+          "outcome_b": "Поле enabled должно быть типа boolean (true или false).",
+          "outcome_a_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип integer: 0 — выключено, 1 — включено.",
+          "outcome_b_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип boolean: false — выключено, true — включено.",
+          "duplicate_of": "",
+          "final_description": "В спецификации API для GET /preferences поле 'enabled' одновременно определено как integer и как boolean.",
+          "final_question": "Какой тип данных должен быть у поля 'enabled' в ответе GET /preferences?",
+          "scenario": "Запрос GET /preferences, получение ответа с полем enabled.",
+          "verdict": "defect",
+          "kind": "conflict",
+          "sources": [
+            "S001",
+            "S002"
+          ],
+          "reason": "В документации присутствуют два явно противоречащих друг другу требования к типу данных одного и того же поля в одном и то же ответе API. Это классический конфликт, который делает реализацию невозможной без уточнения."
+        },
+        {
+          "id": "C002",
+          "required_action_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип integer: 0 — выключено, 1 — включено.",
+          "scenario_basis_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип integer: 0 — выключено, 1 — включено.",
+          "requires_unstated_assumption": false,
+          "strongest_counterevidence_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип integer: 0 — выключено, 1 — включено.",
+          "outcome_a": "Поле enabled должно быть типа integer (0 или 1).",
+          "outcome_b": "Поле enabled должно быть типа boolean (true или false).",
+          "outcome_a_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип integer: 0 — выключено, 1 — включено.",
+          "outcome_b_quote": "В каждом успешном JSON-ответе GET /preferences поле enabled обязательно имеет тип boolean: false — выключено, true — включено.",
+          "duplicate_of": "C001",
+          "final_description": "В спецификации API для GET /preferences поле 'enabled' одновременно определено как integer и как boolean.",
+          "final_question": "Какой тип данных должен быть у поля 'enabled' в ответе GET /preferences?",
+          "scenario": "Запрос GET /preferences, получение ответа с полем enabled.",
+          "verdict": "duplicate",
+          "kind": "conflict",
+          "sources": [
+            "S001",
+            "S002"
+          ],
+          "reason": "Причина полностью совпадает с C001."
+        }
+      ]
+    }
+  }
+]

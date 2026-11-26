@@ -1,0 +1,54 @@
+kiker 1 year-boundary: PASS 63.0s
+Traceback (most recent call last):
+  File "/Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/release-105-checkout/kiker/gemini.py", line 72, in _generate
+    with urlopen(request, timeout=self.timeout) as response:
+         ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.8/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.8/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 493, in open
+    response = meth(req, response)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.8/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 602, in http_response
+    response = self.parent.error(
+        'http', request, response, code, msg, hdrs)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.8/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 531, in error
+    return self._call_chain(*args)
+           ~~~~~~~~~~~~~~~~^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.8/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.8/Frameworks/Python.framework/Versions/3.14/lib/python3.14/urllib/request.py", line 611, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 503: Service Unavailable
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/release-105-checkout/evals/run.py", line 127, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/release-105-checkout/evals/run.py", line 90, in main
+    audit = review(document, client, lambda _: None)
+  File "/Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/release-105-checkout/kiker/audit.py", line 642, in review
+    result, rejected_in_pass = _ask(reviewer, instruction, scope, local=False)
+                               ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/release-105-checkout/kiker/audit.py", line 328, in _ask
+    return _ask_records(
+        reviewer, SYSTEM, f"{instruction}\n\nИсходные фрагменты\n{_pack(context if context is not None else blocks)}",
+        _schema(blocks, local), 3200,
+    )
+  File "/Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/release-105-checkout/kiker/audit.py", line 310, in _ask_records
+    data = reviewer.chat(system, correction + content, schema, output_limit)
+  File "/Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/release-105-checkout/evals/run.py", line 73, in traced_chat
+    response = original_chat(system, content, schema, output_limit)
+  File "/Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/release-105-checkout/kiker/gemini.py", line 144, in chat
+    result = self._generate({
+        "systemInstruction": {"parts": [{"text": system}]},
+        "contents": [{"role": "user", "parts": [{"text": content}]}],
+        "generationConfig": config,
+    })
+  File "/Users/nurdauletkystaubaj/Desktop/BCC_HUB/validation/release-105-checkout/kiker/gemini.py", line 107, in _generate
+    time.sleep(delay)
+    ~~~~~~~~~~^^^^^^^
+KeyboardInterrupt

@@ -1,0 +1,22 @@
+[
+  {
+    "file": "regression/kiker-january-conflict-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "schema/kiker-state-encoding-clean-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "schema/kiker-type-conflict-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "initial-state/kiker-initial-state-clean-1.md",
+    "source_and_report_verified": true
+  },
+  {
+    "file": "live-ui/report.md",
+    "source_and_report_verified": true
+  }
+]

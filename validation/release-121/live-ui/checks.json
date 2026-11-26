@@ -1,0 +1,10 @@
+{
+  "live_gemini_upload": true,
+  "id": "55d498ed26ee4ea4bd71df3a40ef8084",
+  "version": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+  "findings": 5,
+  "seconds": 150.39365229199757,
+  "reused_same_run": true,
+  "reuse_seconds": 0.06112220900002285,
+  "browser_errors": []
+}

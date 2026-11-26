@@ -1,0 +1,16 @@
+{
+  "check": "real HTTP 503 is shown as failure, no successful report",
+  "runs": [
+    {
+      "id": "b616ede9a33c44d0b6823c639fc237fe",
+      "name": "requirements.md",
+      "title": "Уведомление о расходах по карте",
+      "status": "error",
+      "created_at": "2026-11-26T16:27:23.672+05:00",
+      "step": "Проверка не завершилась",
+      "imported": false,
+      "sha256": "e7dae55e5453a250d93e335f5ff9c7f775f4457ccddd333f4a67e47b20d74381",
+      "error": "Gemini вернул HTTP 503."
+    }
+  ]
+}

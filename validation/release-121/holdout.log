@@ -1,0 +1,8 @@
+kiker 1 year-boundary: PASS 39.94s
+kiker 1 posting-clean: PASS 35.03s
+kiker 1 cash-exclusion: PASS 43.35s
+kiker 1 initial-state-clean: PASS 29.52s
+kiker 1 csv-boundary: PASS 30.06s
+kiker 1 retry-clean: PASS 42.28s
+kiker 1 unpaid-cancelled: PASS 120.36s
+kiker 1 limit-clean: FAIL 80.46s

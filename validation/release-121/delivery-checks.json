@@ -1,0 +1,18 @@
+{
+  "code_revision": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+  "primary_report_matches_generated_bytes": true,
+  "official_input_sha256": "e7dae55e5453a250d93e335f5ff9c7f775f4457ccddd333f4a67e47b20d74381",
+  "full_reports_january_conflict": 2,
+  "full_reports_transfer_false_positive": 0,
+  "pdf_conflict_found": true,
+  "browser_checks": 9,
+  "unit_tests": 44,
+  "distinct_scenarios_completed": 18,
+  "benchmark_attempts": 19,
+  "benchmark_api_failures": 1,
+  "human_pilot_participants": 0,
+  "blank_pilot_form": true,
+  "local_markdown_links_valid": true,
+  "known_secret_pattern_matches": 0,
+  "video_decode_verified": true
+}

@@ -1,0 +1,12 @@
+{
+  "status": "stopped after discovery of a semantic false positive",
+  "completed_or_running": "4 holdout cases completed; csv-boundary was interrupted because this revision was superseded",
+  "not_started": [
+    "remaining holdout cases",
+    "regression",
+    "repeat",
+    "official-2",
+    "post sequence"
+  ],
+  "reason": "initial-state-clean incorrectly interprets a business state as a Boolean API type; preserve results and evaluate a new revision"
+}

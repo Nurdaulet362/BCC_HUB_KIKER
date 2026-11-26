@@ -1,0 +1,34 @@
+[
+  {
+    "stage": "export-repeat",
+    "exit_code": 0
+  },
+  {
+    "stage": "live-ui-1",
+    "exit_code": 0
+  },
+  {
+    "stage": "regression",
+    "exit_code": 0
+  },
+  {
+    "stage": "holdout",
+    "exit_code": 1
+  },
+  {
+    "stage": "schema",
+    "exit_code": 0
+  },
+  {
+    "stage": "repeat",
+    "exit_code": 0
+  },
+  {
+    "stage": "official-2",
+    "exit_code": 0
+  },
+  {
+    "stage": "pdf",
+    "exit_code": 0
+  }
+]

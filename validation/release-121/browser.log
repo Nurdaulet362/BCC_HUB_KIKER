@@ -1,0 +1,13 @@
+
+> test:browser
+> node tests/browser.mjs ../release-121/regression ../release-121/browser
+
+PASS empty input gives a focused, readable error
+PASS saved real Gemini result imports with two source quotes
+PASS analyst decision and comment persist across reload
+PASS saving a decision works when its card leaves the active filter
+PASS download keeps the generated report unchanged
+PASS corrected document shows zero findings
+PASS comparison distinguishes absent, matched and new findings
+PASS 390px layout has no horizontal overflow
+PASS no browser script errors
