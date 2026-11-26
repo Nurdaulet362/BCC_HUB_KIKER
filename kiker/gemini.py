@@ -43,7 +43,7 @@ class Gemini:
             raise ModelError("KIKER_TIMEOUT должен быть от 1 до 1800 секунд.")
         if not 0 <= self.request_interval <= 60:
             raise ModelError("KIKER_REQUEST_INTERVAL должен быть от 0 до 60 секунд.")
-        self.thinking_level = values.get("KIKER_THINKING", "MEDIUM" if self.model.startswith("gemini-3.1-flash-lite") else "LOW").upper()
+        self.thinking_level = values.get("KIKER_THINKING", "LOW").upper()
         if self.thinking_level not in {"MINIMAL", "LOW", "MEDIUM", "HIGH"}:
             raise ModelError("KIKER_THINKING должен быть MINIMAL, LOW, MEDIUM или HIGH.")
         self._next_request = 0.0
