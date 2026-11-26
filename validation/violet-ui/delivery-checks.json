@@ -1,0 +1,14 @@
+{
+  "ui_revision": "5d7749c4e6499b85ce9a2a93f3b56aa2fe8a51d6",
+  "analysis_revision": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
+  "changed_source_files": [
+    "docs/UI_DESIGN.md",
+    "kiker/static/app.css",
+    "kiker/static/index.html"
+  ],
+  "browser_checks_passed": 12,
+  "additional_ui_checks_passed": 5,
+  "new_gemini_calls": 0,
+  "unchanged_previous_evidence_files": 356,
+  "media_decode_passed": true
+}

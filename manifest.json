@@ -1,5 +1,5 @@
 {
-  "code_revision": "2743c634ca6489d5e763e0bf32bcf63b0daaaa1a",
+  "code_revision": "5d7749c4e6499b85ce9a2a93f3b56aa2fe8a51d6",
   "model": "gemini-3.1-flash-lite",
   "thinking_level": "LOW",
   "temperature": 0,
@@ -10,13 +10,13 @@
   "official_source_revision": "928c1aa364265426105b69ba7a3444eac11b22db",
   "baseline_revision": "287319302afc601ecd5f24b1d4358049891d9747",
   "video_seconds": 95.67766666666667,
-  "generated_at": "2026-11-26T17:58:31+05:00",
+  "generated_at": "2026-11-26T18:08:00+05:00",
   "analysis_revision": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
-  "ui_revision": "2743c634ca6489d5e763e0bf32bcf63b0daaaa1a",
+  "ui_revision": "5d7749c4e6499b85ce9a2a93f3b56aa2fe8a51d6",
   "files": {
     "DEMO.md": {
-      "bytes": 7272,
-      "sha256": "11066224850ca0bd0c2f9ea43414f3cfe2fc2d7c34c44347a9f44724d75b7731"
+      "bytes": 7274,
+      "sha256": "d36b3babcfa7bacf411fa8568d4287f3f8cb5493242522b270bff48ef62e7d98"
     },
     "NARRATION.md": {
       "bytes": 2663,
@@ -27,20 +27,20 @@
       "sha256": "7e4fb5e2841881be58cf9a144386fd2c1a672bd40d5907add9c1fa15b3c114b5"
     },
     "QUALITY.md": {
-      "bytes": 13654,
-      "sha256": "b910a00abc91daac6de856d0a0544a47aa23b6fd79f98509d1789c1f127388e8"
+      "bytes": 14208,
+      "sha256": "bfe01237a3bca48d5c8215f10c8d78a71def5704e587ac5a0d3e677528ac8f12"
     },
     "README.md": {
-      "bytes": 5396,
-      "sha256": "7bbf4c03acddb819b17f101e6e3db15d853d55544a0682fdc54e1d40a760cc53"
+      "bytes": 5674,
+      "sha256": "2c37b932fa49643f82d0df31b418953a3fcef81ef59daf2ba8a1beb99df2ed01"
     },
     "UI.md": {
-      "bytes": 2923,
-      "sha256": "facdcc2e3232a6b390b199b03e00984a456d14c831c1a8598f54c468ffcd69a8"
+      "bytes": 3198,
+      "sha256": "bcef8902fbd892ccf8d2c3b3d77015f009dd48df6656e3a3e806d64284abca29"
     },
     "demo.mp4": {
-      "bytes": 2863841,
-      "sha256": "27952c91dd6ea3ed6fcb49d847363dcd18d0964c0e08375900a07fa29f4c7e7c"
+      "bytes": 2924563,
+      "sha256": "d881d1bd19aa71056f4d03f0e62c9200a119d3c6b858ee03da07c6ddacfa18ff"
     },
     "pilot-observations.csv": {
       "bytes": 348,
@@ -59,16 +59,16 @@
       "sha256": "3a999cf69185534f3a70d21932c15492ccdf36efd7fe9207d324858e126ba511"
     },
     "screenshot.png": {
-      "bytes": 147230,
-      "sha256": "dc7e43026b96951760f293cef4de3fdfa56940f47cb319c492f1eb2114afd25d"
+      "bytes": 148515,
+      "sha256": "3e7dc8003f1d864537dc00313b67541bfcdc8345db9db87b8772e08bf1fba953"
     },
     "start.png": {
-      "bytes": 66092,
-      "sha256": "923d539ca44ffc3539732388f19dd0e00bf4472f076602890fce92d19c85cfc6"
+      "bytes": 62830,
+      "sha256": "28c4e9756e71b1f30105e1935db58c84583c1312519affa837068a8d980239c9"
     },
     "validation/README.md": {
-      "bytes": 1639,
-      "sha256": "0dcefec36c62b7b62c6852760e1cf1636bfb8d33d5c021a5a760d8441f6c978d"
+      "bytes": 1820,
+      "sha256": "21cf8330ccd64561991885209e7b7ee1d1ea91382868cf43233f96437e9cda2e"
     },
     "validation/dark-ui/browser/01-upload.png": {
       "bytes": 71258,
@@ -1469,6 +1469,106 @@
     "validation/release-121/unit-tests.log": {
       "bytes": 6309,
       "sha256": "4c7c311a505db0274c9973eb26b26358362446b22a287732ad151e4d4590dd17"
+    },
+    "validation/violet-ui/browser/01-upload.png": {
+      "bytes": 62830,
+      "sha256": "28c4e9756e71b1f30105e1935db58c84583c1312519affa837068a8d980239c9"
+    },
+    "validation/violet-ui/browser/02-review.png": {
+      "bytes": 149310,
+      "sha256": "555b6b209cd97a8247f5d8425fa83e5e8272bd6fd45e7f9f275eb8a30f68a4bc"
+    },
+    "validation/violet-ui/browser/03-comparison.png": {
+      "bytes": 93400,
+      "sha256": "60770d4d28c34fba0a926bfb05511e0ee35fb371ebacdb63005edb74aacc8281"
+    },
+    "validation/violet-ui/browser/04-mobile-upload.png": {
+      "bytes": 35321,
+      "sha256": "7bf0b15f9434e60b6c5d556142d3f854861e771f834c1748eb811442736b4c69"
+    },
+    "validation/violet-ui/browser/05-mobile-review.png": {
+      "bytes": 109807,
+      "sha256": "68eb605aa9accdca359a163b63ee464fb3d1c8961758b1f135d550592ee7285e"
+    },
+    "validation/violet-ui/browser/checks.json": {
+      "bytes": 1332,
+      "sha256": "8e6fcf3da9417147052cd6217354e5798f81a2cb81130b0ed064755dbb262515"
+    },
+    "validation/violet-ui/browser/downloaded-report.md": {
+      "bytes": 4054,
+      "sha256": "783216be577460079468a6619012ab6b95e43158aaa45b785430534bed17f4f9"
+    },
+    "validation/violet-ui/delivery-checks.json": {
+      "bytes": 414,
+      "sha256": "26f167d37714efa50a09610bd6754e169cec34671884d193b272763857ad51a9"
+    },
+    "validation/violet-ui/demo/checks.json": {
+      "bytes": 746,
+      "sha256": "f314094966da437941a3362a7c16e1290e5d531618ac55c41ff673310f622400"
+    },
+    "validation/violet-ui/demo/decisions.json": {
+      "bytes": 509,
+      "sha256": "a9b1cf753fc3acf954e7bcfb8ff34d2fe18715dcebbf23ba26a51ee928f37e4d"
+    },
+    "validation/violet-ui/demo/events.json": {
+      "bytes": 745,
+      "sha256": "94d7fa8811143ada47e5d38e86c543eeb8c2269af09b27fb13b68c9e05705042"
+    },
+    "validation/violet-ui/evidence/checks.json": {
+      "bytes": 1487,
+      "sha256": "4fc72dd46efd388d72854e1421cabdc552c1fcac530dfffe61b2a225f7a6d392"
+    },
+    "validation/violet-ui/evidence/contract.md": {
+      "bytes": 4798,
+      "sha256": "5e5eefd136a78dc3caa81c042ac736fd6ffe0f04a54d4d909b0d5e15c213e507"
+    },
+    "validation/violet-ui/evidence/desktop-attachment.png": {
+      "bytes": 75756,
+      "sha256": "2c162185aee6a1d9e6360e2c68bdb4df02a1752d7a2fa8e66f703315686f0eda"
+    },
+    "validation/violet-ui/evidence/desktop-error.png": {
+      "bytes": 73333,
+      "sha256": "67e1eaae28020e70e47634a8cdd59a4db27771d67ad37f7e4e836cb8fee887ec"
+    },
+    "validation/violet-ui/evidence/desktop-failed-simulated.png": {
+      "bytes": 60452,
+      "sha256": "be22cb0522d1dd86683eb38f367c02e307919f86bfa1b704183d0d411a2c7ed6"
+    },
+    "validation/violet-ui/evidence/desktop-loading-simulated.png": {
+      "bytes": 61899,
+      "sha256": "39e3e32ccbaf7c8c2595abd8460d40035d1bb009b35fd6667ba58ff9ffb5bd42"
+    },
+    "validation/violet-ui/evidence/desktop-partial.png": {
+      "bytes": 200285,
+      "sha256": "ff7cde45de429554ec166ce697e6a2e6816fc81d4195edfb9af1319e4b43eb8e"
+    },
+    "validation/violet-ui/evidence/desktop-start.png": {
+      "bytes": 68322,
+      "sha256": "c3828f68027cf790f054d6b512620329fc2cfee50c825582e24de75d8d46285d"
+    },
+    "validation/violet-ui/evidence/evidence.json": {
+      "bytes": 3049,
+      "sha256": "e5a06607b57a177e7c76add5f490296a25f3d47e42a832b2ee28a27b7d3a0163"
+    },
+    "validation/violet-ui/evidence/hex-button.json": {
+      "bytes": 147,
+      "sha256": "8d8f600ee988d284250b6854a9389573d0a74aeee6f370cf578381404b5870d2"
+    },
+    "validation/violet-ui/evidence/mobile-attachment.png": {
+      "bytes": 43236,
+      "sha256": "178553717ead7c22725851a7d152405a9ab48827c31ce37269a7251b9779393d"
+    },
+    "validation/violet-ui/evidence/mobile-review.png": {
+      "bytes": 115535,
+      "sha256": "74920fc6838f981665d9952ecc62645f70708d6d14938b10bd8795b102f4d2f3"
+    },
+    "validation/violet-ui/evidence/mobile-sidebar.png": {
+      "bytes": 111469,
+      "sha256": "3856edf884582aa0f998016553c6a342696262247b4a09bda584ce65dddac4b6"
+    },
+    "validation/violet-ui/evidence/mobile-start.png": {
+      "bytes": 35359,
+      "sha256": "57f0b0486dad81ec2780ba6df7ada571ef75886192b51a4ad24639ea9eb299cb"
     }
   }
 }
