@@ -40,7 +40,11 @@ function show(view, breadcrumb) {
 }
 function formatDate(value) {
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleString("ru-RU", {day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"});
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleString("ru-RU", {day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", second: "2-digit"});
+}
+function findingCount(value) {
+  const ending = value % 100 >= 11 && value % 100 <= 14 ? "замечаний" : value % 10 === 1 ? "замечание" : value % 10 >= 2 && value % 10 <= 4 ? "замечания" : "замечаний";
+  return `${value} ${ending}`;
 }
 function setFile(file) {
   if (!file) return;
@@ -70,7 +74,7 @@ async function history() {
     const button = el("button", undefined, "history-item" + (state.entry?.id === entry.id ? " active" : ""));
     button.type = "button";
     button.append(el("strong", entry.title), el("small", formatDate(entry.created_at) + " · " + (
-      entry.status === "complete" ? `${entry.findings} замечаний` : entry.status === "error" ? "Ошибка запуска" : "Выполняется"
+      entry.status === "complete" ? findingCount(entry.findings) : entry.status === "error" ? "Ошибка запуска" : "Выполняется"
     )));
     button.title = entry.title;
     button.onclick = () => load(entry.id);
@@ -196,7 +200,7 @@ async function openCompare() {
   for (const name of ["compare-before", "compare-after"]) {
     $(name).replaceChildren();
     for (const entry of completed) {
-      const option = el("option", `${entry.title} · ${formatDate(entry.created_at)}`); option.value = entry.id; $(name).append(option);
+      const option = el("option", `${entry.name} · ${formatDate(entry.created_at)} · ${findingCount(entry.findings)}`); option.value = entry.id; $(name).append(option);
     }
   }
   $("compare-after").value = state.entry.id;

@@ -78,7 +78,7 @@ class Store:
         directory = self.root / run_id
         directory.mkdir(mode=0o700)
         entry = {"id": run_id, "name": filename, "title": filename, "status": status,
-                 "created_at": datetime.now().astimezone().isoformat(timespec="seconds"),
+                 "created_at": datetime.now().astimezone().isoformat(timespec="milliseconds"),
                  "step": "Ожидает запуска", "imported": imported}
         self._save(directory / "meta.json", entry)
         return directory, entry
