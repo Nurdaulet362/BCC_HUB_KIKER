@@ -1,0 +1,10 @@
+[
+  {"id":"year-boundary", "conflicts":[["REQ-1", "Покупка 31 декабря"]]},
+  {"id":"posting-clean", "conflicts":[]},
+  {"id":"cash-exclusion", "conflicts":[["REQ-1", "Расходы 7 400"]]},
+  {"id":"initial-state-clean", "conflicts":[]},
+  {"id":"csv-boundary", "conflicts":[["REQ-1", "Операции 4, 5 и 6"]]},
+  {"id":"retry-clean", "conflicts":[]},
+  {"id":"unpaid-cancelled", "conflicts":[["REQ-1", "REQ-2"]]},
+  {"id":"limit-clean", "conflicts":[]}
+]
