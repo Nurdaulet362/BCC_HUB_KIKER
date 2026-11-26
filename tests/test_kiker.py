@@ -82,9 +82,16 @@ def issue(kind="conflict", sources=None):
     }
 
 
-def confirmation(quote, verdict="defect", kind="conflict", sources=("S001", "S002")):
+def confirmation(quote, verdict="defect", kind="conflict", sources=("S001", "S002"),
+                 second_quote="Повторный запрос всегда выдаёт новый номер."):
     return {"checks": [{
         "id": "C001", "required_action_quote": quote,
+        "scenario_basis_quote": quote, "requires_unstated_assumption": False,
+        "strongest_counterevidence_quote": "", "outcome_a": "Первый результат",
+        "outcome_b": "Второй результат", "outcome_a_quote": quote,
+        "outcome_b_quote": second_quote, "duplicate_of": "",
+        "final_description": "Два правила требуют разных результатов при повторе.",
+        "final_question": "Какой результат возвращать?",
         "scenario": "Один вход требует разных обязательных результатов.",
         "verdict": verdict, "kind": kind, "sources": list(sources), "reason": "Проверено обязательное действие и его результат.",
     }]}
@@ -158,9 +165,6 @@ class KikerTests(unittest.TestCase):
         reviewer = Responses(
             {"requirements": ["S001"], "issues": []},
             {"issues": [issue(sources=["S001", "S999"]), issue()]},
-            {"issues": [issue(sources=["S002", "S001"])]},
-            {"issues": []},
-            {"issues": []},
             confirmation("Повторный запрос возвращает старый номер."),
         )
         audit = review(document, reviewer, lambda _: None)
@@ -184,7 +188,7 @@ class KikerTests(unittest.TestCase):
         ):
             with self.subTest(response=response):
                 confirmed, invalid = _confirm_findings(
-                    Responses(response), [finding], list(document.blocks))
+                    Responses(response, response), [finding], list(document.blocks))
                 self.assertEqual(len(confirmed), count)
                 self.assertEqual(invalid, rejected)
 
@@ -204,7 +208,6 @@ class KikerTests(unittest.TestCase):
         refusal = {"issues": [issue(sources=["S001"])]}
         reviewer = Responses(
             {"requirements": [], "issues": []}, refusal,
-            {"issues": []}, {"issues": []}, {"issues": []},
         )
         result = review(document, reviewer, lambda _: None)
         self.assertEqual(result.findings, ())
@@ -234,8 +237,8 @@ class KikerTests(unittest.TestCase):
         }
         reviewer = Responses(
             {"requirements": ["S001", "S002"], "issues": []},
-            {"issues": []}, {"issues": [ui, ordering, empty_period]}, {"issues": []}, {"issues": []},
-            {"checks": []},
+            {"issues": [ui, ordering, empty_period]},
+            confirmation('', verdict='already_defined'),
         )
         audit = review(document, reviewer, lambda _: None)
         self.assertEqual(audit.requirements, document.blocks)
@@ -262,7 +265,7 @@ class KikerTests(unittest.TestCase):
         }
         reviewer = Responses(
             {"requirements": ["S001", "S002"], "issues": []},
-            {"issues": []}, {"issues": [unsupported, required]}, {"issues": []}, {"issues": []},
+            {"issues": [unsupported, required]},
             confirmation("Строки сверки должны быть отсортированы по сумме.", kind="ambiguous", sources=("S002",)),
         )
         result = review(document, reviewer, lambda _: None)
@@ -296,10 +299,10 @@ class KikerTests(unittest.TestCase):
         ))
         reviewer = Responses(
             {"requirements": ["S001"], "issues": []},
-            {"issues": []}, {"issues": []},
-            {"issues": [issue(sources=["S001", "S002"]), issue(sources=["S001", "S003"])]},
             {"issues": []},
-            confirmation("Переводы исключаются.", sources=("S001", "S003")),
+            {"issues": [issue(sources=["S001", "S002"]), issue(sources=["S001", "S003"])]},
+            confirmation("Переводы исключаются.", sources=("S001", "S003"),
+                         second_quote='Счётчик показывает 12 900 ₸'),
         )
         result = review(document, reviewer, lambda _: None)
         self.assertEqual([finding.sources for finding in result.findings], [("S001", "S003")])
@@ -312,10 +315,11 @@ class KikerTests(unittest.TestCase):
                     '## Приёмка\n\n'
                     f'| Расходы 19 900 ₸ | Перевести 500 ₸ | Счётчик показывает {total} ₸ |\n'))
                 draft = {**issue('gap', ['S001']), 'description': 'Нужно уточнить учёт перевода.'}
-                verifier = confirmation('Переводы исключаются.', kind='ambiguous' if count == 0 else 'conflict')
+                verifier = confirmation('Переводы исключаются.', kind='ambiguous' if count == 0 else 'conflict',
+                                        second_quote=f'Счётчик показывает {total} ₸')
                 reviewer = Responses(
                     {'requirements': ['S001'], 'issues': [draft]},
-                    {'issues': []}, {'issues': []}, {'issues': []}, {'issues': []}, verifier)
+                    {'issues': []}, {'issues': []}, verifier)
                 audit = review(document, reviewer, lambda _: None)
                 self.assertEqual(len(audit.findings), count)
                 self.assertEqual(audit.rejected, 0)
@@ -351,8 +355,8 @@ class KikerTests(unittest.TestCase):
         ))
         reviewer = Responses(
             {"requirements": ["S001"], "issues": []},
-            {"issues": []}, {"issues": []},
-            {"issues": [issue(sources=["S001", "S003"])]}, {"issues": []},
+            {"issues": []},
+            {"issues": [issue(sources=["S001", "S003"])]},
         )
         audit = review(document, reviewer, lambda _: None)
         self.assertEqual([(f.kind, f.severity, f.sources) for f in audit.findings],
@@ -367,12 +371,12 @@ class KikerTests(unittest.TestCase):
         reviewer = Mock()
         reviewer.chat.side_effect = [
             {'requirements': ['S001'], 'issues': [issue('ambiguous', ['S001'])]},
-            {'issues': []}, {'issues': []}, {'issues': []}, {'issues': []}, {'checks': []},
+            {'issues': []}, {'issues': []}, confirmation('', verdict='already_defined'),
         ]
         audit = review(document, reviewer, lambda _: None)
-        confirmation = reviewer.chat.call_args.args[1]
-        self.assertIn('месяц расходов — апрель', confirmation)
-        self.assertIn('S001, S002', confirmation)
+        confirmation_input = reviewer.chat.call_args.args[1]
+        self.assertIn('месяц расходов — апрель', confirmation_input)
+        self.assertIn('S001, S002', confirmation_input)
         self.assertEqual(len(audit.findings), 1)
 
     def test_period_conflict_is_not_repeated_as_local_ambiguity(self):
@@ -384,7 +388,7 @@ class KikerTests(unittest.TestCase):
             'description': 'Правило S001 выбирает дату покупки, но пример S002 увеличивает другой месяц.'}
         reviewer = Responses(
             {'requirements': ['S001'], 'issues': [duplicate]},
-            {'issues': []}, {'issues': []}, {'issues': []}, {'issues': []},
+            {'issues': []}, {'issues': []},
         )
         audit = review(document, reviewer, lambda _: None)
         self.assertEqual([(f.kind, f.sources) for f in audit.findings],
@@ -402,6 +406,39 @@ class KikerTests(unittest.TestCase):
         self.assertNotIn("format", requests[1])
         self.assertNotIn("format", requests[2])
         self.assertIn('{"type":"object"}', requests[1]["messages"][0]["content"])
+
+    def test_unstated_scenario_is_not_promoted_to_a_defect(self):
+        document = read_document(source_file(self.directory))
+        draft = Finding('gap', 'major', 'Не хватает правила.', 'Что происходит?', ('S001',), 'Проверка')
+        response = confirmation('Повторный запрос возвращает старый номер.')
+        response['checks'][0]['requires_unstated_assumption'] = True
+        result, rejected = _confirm_findings(Responses(response), [draft], list(document.blocks))
+        self.assertEqual((result, rejected), ((), 0))
+
+    def test_proof_typography_is_accepted_but_a_wrong_quote_gets_one_repair(self):
+        document = read_document(source_file(self.directory))
+        draft = Finding('conflict', 'major', 'Разные номера.', 'Какой номер?', ('S001', 'S002'), 'Проверка')
+        bad = confirmation('Сервис обязан отправить письмо.')
+        fixed = confirmation('**Повторный запрос** возвращает старый номер.')
+        fixed['checks'][0]['outcome_b_quote'] = 'Повторный запрос всегда выдаёт новый номер.'
+        result, rejected = _confirm_findings(Responses(bad, fixed), [draft], list(document.blocks))
+        self.assertEqual((len(result), rejected), (1, 0))
+
+    def test_conflict_requires_two_grounded_outcome_quotes(self):
+        document = read_document(source_file(self.directory))
+        draft = Finding('conflict', 'major', 'Разные номера.', 'Какой номер?', ('S001', 'S002'), 'Проверка')
+        response = confirmation('Повторный запрос возвращает старый номер.',
+                                second_quote='Повторный запрос возвращает старый номер.')
+        result, rejected = _confirm_findings(Responses(response, response), [draft], list(document.blocks))
+        self.assertEqual((result, rejected), ((), 1))
+
+    def test_editorial_placeholders_are_not_requirements(self):
+        document = read_document(source_file(self.directory,
+            '# API\n\nREQ-1. Сервис возвращает номер заявки.\n\nили\n\nзаполняются тестировщиками\n'))
+        reviewer = Responses({'requirements': ['S001'], 'issues': []}, {'issues': []})
+        result = review(document, reviewer, lambda _: None)
+        self.assertEqual([b.original_id for b in result.requirements], ['REQ-1'])
+        self.assertEqual(len(document.blocks), 3)
 
     def test_gemini_structured_request_and_usage(self):
         with unittest.mock.patch("kiker.gemini.environment", return_value={"GEMINI_API_KEY": "test"}):
