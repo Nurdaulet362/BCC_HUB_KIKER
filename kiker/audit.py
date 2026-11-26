@@ -315,7 +315,8 @@ def _ask(
 def _quote_text(text: str) -> str:
     """Ignore presentation marks only; never accept a semantic paraphrase."""
     text = unicodedata.normalize("NFKC", text).replace("ё", "е").replace("Ё", "Е")
-    text = re.sub(r"[\*`_]", "", text)
+    text = re.sub(r"`+([^`]+)`+", r"\1", text)
+    text = re.sub(r"(?<!\w)(\*\*|__|\*|_)(?=\S)(.+?)(?<=\S)\1(?!\w)", r"\2", text)
     return " ".join(text.split())
 
 

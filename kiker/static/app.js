@@ -106,6 +106,7 @@ async function load(id) {
 }
 function decisionFor(id) { return state.entry.decisions.items[id] || {decision: "pending", note: ""}; }
 function renderReview() {
+  $("save-status").textContent = "";
   const entry = state.entry, result = entry.result;
   $("run-origin").textContent = entry.imported ? "СОХРАНЁННЫЙ ОТЧЁТ · БЕЗ НОВОГО ЗАПРОСА" : "РЕЗУЛЬТАТ ПРОВЕРКИ";
   $("review-title").textContent = result.document.title;
@@ -177,11 +178,13 @@ function renderDetail(finding) {
   form.append(options, label, note, bottom);
   form.onsubmit = async event => {
     event.preventDefault(); submit.disabled = true; notice("");
+    const entryId = state.entry.id;
     try {
-      const record = await api(`/api/runs/${state.entry.id}/decisions`, {id: finding.id, decision: new FormData(form).get("decision"), note: note.value, revision: state.entry.decisions.revision});
+      const record = await api(`/api/runs/${entryId}/decisions`, {id: finding.id, decision: new FormData(form).get("decision"), note: note.value, revision: state.entry.decisions.revision});
+      if (state.entry?.id !== entryId) return;
       state.entry.decisions = record;
       renderReview();
-      $("finding-detail").querySelector('[role="status"]').textContent = "Решение сохранено";
+      $("save-status").textContent = "Решение сохранено";
     } catch (error) { notice(error.message); submit.disabled = false; }
   };
   panel.append(form);

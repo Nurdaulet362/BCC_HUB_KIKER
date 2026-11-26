@@ -112,7 +112,8 @@ def main():
                 record.update(seconds=round(time.monotonic() - start, 2), requests=client.calls,
                               input_tokens=client.input_tokens, output_tokens=client.output_tokens,
                               model_version=client.version)
-                record.update(attempts=client.attempts, request_seconds=client.request_times)
+                record.update(attempts=client.attempts, request_seconds=client.request_times,
+                              attempt_events=client.attempt_events)
                 results.append(record)
                 _write_report(args.output / 'results.json', json.dumps(results, ensure_ascii=False, indent=2) + '\n')
                 print(f'{mode} {repeat} {case["id"]}: {"PASS" if record["passed"] else "FAIL"} '

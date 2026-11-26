@@ -50,6 +50,7 @@ class Gemini:
         self.calls = 0
         self.attempts = 0
         self.request_times = []
+        self.attempt_events = []
         self.input_tokens = 0
         self.output_tokens = 0
         self.version = None
@@ -66,13 +67,18 @@ class Gemini:
             self._next_request = time.monotonic() + self.request_interval
             self.attempts += 1
             request_started = time.monotonic()
+            event = {"outcome": "pending", "retry_delay_seconds": 0}
             try:
                 with urlopen(request, timeout=self.timeout) as response:
                     result = json.load(response)
                     if not isinstance(result, dict):
                         raise ModelError("Gemini вернул нечитаемый ответ.")
+                    event["outcome"] = "ok"
                     return result
             except HTTPError as error:
+                event.update(outcome=f"HTTP {error.code}", seconds=round(time.monotonic() - request_started, 3))
+                if error.code != 429:
+                    error.close()
                 if error.code == 429:
                     try:
                         details = json.load(error).get("error", {}).get("details", [])
@@ -97,6 +103,7 @@ class Gemini:
                     delay = min(60, int(retry_after)) if retry_after.isdigit() else (
                         20 * (attempt + 1) if error.code == 429 else 2 ** (attempt + 1)
                     )
+                    event["retry_delay_seconds"] = delay
                     time.sleep(delay)
                     continue
                 messages = {
@@ -108,7 +115,10 @@ class Gemini:
                 }
                 raise ModelError(messages.get(error.code, f"Gemini вернул HTTP {error.code}.")) from error
             except (URLError, TimeoutError) as error:
+                event.update(outcome="network_timeout" if isinstance(error, TimeoutError) else "network_error",
+                             seconds=round(time.monotonic() - request_started, 3))
                 if attempt < 2:
+                    event["retry_delay_seconds"] = 2 ** (attempt + 1)
                     time.sleep(2 ** (attempt + 1))
                     continue
                 raise ModelError("Не удалось подключиться к Gemini API.") from error
@@ -116,6 +126,8 @@ class Gemini:
                 raise ModelError("Gemini вернул нечитаемый ответ.") from error
             finally:
                 self.request_times.append(round(time.monotonic() - request_started, 3))
+                event.setdefault("seconds", round(time.monotonic() - request_started, 3))
+                self.attempt_events.append(event)
         raise ModelError("Запрос к Gemini не завершился.")
 
     def chat(self, system: str, content: str, schema: dict, output_limit: int) -> object:

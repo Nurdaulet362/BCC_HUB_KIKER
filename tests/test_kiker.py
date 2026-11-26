@@ -21,7 +21,7 @@ from kiker.acceptance import (
     expense_month_rule,
     matches_expense_exclusion,
 )
-from kiker.audit import Audit, Finding, LOCAL, _ask, _confirm_findings, _grounded_design_detail, review
+from kiker.audit import Audit, Finding, LOCAL, _ask, _confirm_findings, _grounded_design_detail, _quoted_sources, review
 from kiker.gemini import Gemini
 from kiker.ollama import FormatUnavailable, Ollama, Settings
 from kiker.report import Run, render
@@ -439,6 +439,12 @@ class KikerTests(unittest.TestCase):
         result = review(document, reviewer, lambda _: None)
         self.assertEqual([b.original_id for b in result.requirements], ['REQ-1'])
         self.assertEqual(len(document.blocks), 3)
+
+    def test_quote_normalization_preserves_identifier_underscores(self):
+        document = read_document(source_file(self.directory,
+            '# API\n\nREQ-1. Поле `operation_id` обязательно.\n'))
+        self.assertEqual(_quoted_sources('Поле operation_id обязательно.', list(document.blocks)), {'S001'})
+        self.assertEqual(_quoted_sources('Поле operationid обязательно.', list(document.blocks)), set())
 
     def test_gemini_structured_request_and_usage(self):
         with unittest.mock.patch("kiker.gemini.environment", return_value={"GEMINI_API_KEY": "test"}):
