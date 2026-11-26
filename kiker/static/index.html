@@ -12,6 +12,7 @@
 <body>
   <a class="skip" href="#main">К содержимому</a>
   <svg class="icon-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="icon-hex-check" viewBox="0 0 32 36"><path class="hex-frame" d="m16 2 14 8v16l-14 8L2 26V10Z"/><path d="m10 18 4 4 8-9"/></symbol>
     <symbol id="icon-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></symbol>
     <symbol id="icon-edit" viewBox="0 0 24 24"><path d="M12 4H6a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h11a3 3 0 0 0 3-3v-6M15 4l5 5M10 14l-1 4 4-1L22 8a2 2 0 0 0-5-5Z"/></symbol>
     <symbol id="icon-folder" viewBox="0 0 24 24"><path d="M3 8V6a2 2 0 0 1 2-2h5l3 3h6a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z"/></symbol>
@@ -22,7 +23,7 @@
   </defs></svg>
   <div class="shell" id="shell">
     <aside class="sidebar" id="sidebar" aria-label="Документы и история">
-      <div class="sidebar-heading"><a class="brand" href="/" aria-label="KIKER, главная">KIKER<span class="brand-dot">.</span></a><button id="close-sidebar" class="icon-button" aria-label="Скрыть боковую панель" title="Скрыть боковую панель"><svg class="icon"><use href="#icon-panel"/></svg></button></div>
+      <div class="sidebar-heading"><a class="brand" href="/" aria-label="KIKER, главная"><svg class="hex-mark" aria-hidden="true"><use href="#icon-hex-check"/></svg><span>KIKER<span class="brand-dot">.</span></span></a><button id="close-sidebar" class="icon-button" aria-label="Скрыть боковую панель" title="Скрыть боковую панель"><svg class="icon"><use href="#icon-panel"/></svg></button></div>
       <button id="new-review" class="nav-button"><svg class="icon" aria-hidden="true"><use href="#icon-edit"/></svg>Новая проверка</button>
       <button id="import-button" class="nav-button"><svg class="icon" aria-hidden="true"><use href="#icon-folder"/></svg>Открыть отчёт</button><input id="import-file" type="file" accept=".json" hidden>
       <div class="section-label">Недавние проверки <span id="history-count">0</span></div>
@@ -40,6 +41,7 @@
 
       <section id="upload-view" class="content upload-view">
         <div class="start-content">
+          <svg class="hex-mark start-mark" aria-hidden="true"><use href="#icon-hex-check"/></svg>
           <h1>Что проверим сегодня?</h1>
           <p class="intro">Найдём противоречия в ТЗ. Каждое замечание — с цитатами.</p>
           <form id="upload-form" class="composer" aria-label="Проверка технического задания">
