@@ -37,6 +37,7 @@
             <label for="document-text" class="field-label">Требования в Markdown</label>
             <textarea id="document-text" rows="7" placeholder="# Название документа&#10;&#10;REQ-1. Система должна…"></textarea>
             <div class="sample-row"><button type="button" id="load-sample" class="text-button">Вставить контрольный пример ↗</button><button type="button" id="clear-input" class="text-button muted">Очистить</button></div>
+            <label class="reuse-option"><input id="reuse-result" type="checkbox" checked> Открыть готовый отчёт, если документ и настройки не изменились</label>
             <div class="upload-footer"><p>При запуске текст документа передаётся в Gemini API.</p><button id="submit-review" class="primary" type="submit">Проверить ТЗ <span aria-hidden="true">→</span></button></div>
           </form>
           <aside class="guide">

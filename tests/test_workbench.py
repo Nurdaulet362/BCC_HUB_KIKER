@@ -5,6 +5,7 @@ from pathlib import Path
 import tempfile
 from threading import Thread
 import unittest
+from unittest.mock import Mock, patch
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -115,6 +116,29 @@ class WorkbenchTests(unittest.TestCase):
         directory, entry = self.store._create('interrupted.md', 'running')
         restarted = Store(self.root / 'runs'); self.addCleanup(restarted.close)
         self.assertEqual(restarted.get(entry['id'])['status'], 'error')
+
+    def test_reuse_requires_same_bytes_model_settings_and_code(self):
+        from dataclasses import replace
+        config = {'thinking_level': 'LOW', 'request_interval': 15, 'timeout': 90}
+        fake = Mock(side_effect=lambda document, progress: (
+            Audit(document.blocks, ()), replace(self.run, settings=dict(config))))
+        client = Mock(model='test', thinking_level='LOW', request_interval=15, timeout=90)
+        with patch('kiker.web.run_document', fake), patch('kiker.web.Gemini', return_value=client), patch('kiker.web.environment', return_value={}):
+            store = Store(self.root/'cache', execute=fake); self.addCleanup(store.close)
+            data=b'# Cache\n\nREQ-1. Return one value.\n'
+            first=store.submit('test.md',data,reuse=True)
+            store.pool.submit(lambda: None).result(timeout=2)
+            reused=store.submit('test.md',data,reuse=True)
+            self.assertEqual(reused['id'],first['id']);self.assertTrue(reused['reused'])
+            self.assertEqual(fake.call_count,1)
+            changed=store.submit('test.md',data+b'\nREQ-2. Return another value.\n',reuse=True)
+            store.pool.submit(lambda: None).result(timeout=2)
+            self.assertNotEqual(changed['id'],first['id'])
+            client.thinking_level='MEDIUM'
+            different=store.submit('test.md',data,reuse=True)
+            store.pool.submit(lambda: None).result(timeout=2)
+            self.assertNotEqual(different['id'],first['id'])
+            self.assertEqual(fake.call_count,3)
 
 
 if __name__ == '__main__': unittest.main()

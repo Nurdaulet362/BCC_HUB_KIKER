@@ -418,6 +418,8 @@ def _confirm_findings(
                 if record["kind"] == "conflict" and (
                     len(cited) < 2 or not any(a != b for a in first for b in second)
                     or not record["outcome_a"].strip() or not record["outcome_b"].strip()
+                    or _quote_text(record["outcome_a_quote"]) == _quote_text(record["outcome_b_quote"])
+                    or _quote_text(record["outcome_a"]) == _quote_text(record["outcome_b"])
                 ):
                     problems[key] = "для конфликта нужны два результата и дословные цитаты из разных источников"
                     continue

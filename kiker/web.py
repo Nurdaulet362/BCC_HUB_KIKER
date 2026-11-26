@@ -5,6 +5,7 @@ import base64
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import replace
 from datetime import datetime
+import hashlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
@@ -14,8 +15,9 @@ from threading import RLock
 from urllib.parse import parse_qs, urlsplit
 import uuid
 
-from .__main__ import _write_report, run_document
-from .config import ModelError
+from .__main__ import _version, _write_report, run_document
+from .config import ModelError, environment
+from .gemini import Gemini
 from .snapshot import compare, snapshot, validate_snapshot
 from .source import read_document
 
@@ -34,6 +36,7 @@ class Store:
         self.root = root.resolve()
         self.root.mkdir(parents=True, exist_ok=True, mode=0o700)
         self.execute = execute
+        self.code_version = _version()
         self.lock = RLock()
         self.pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="kiker-review")
         for path in self.root.glob("*/meta.json"):
@@ -80,7 +83,7 @@ class Store:
         self._save(directory / "meta.json", entry)
         return directory, entry
 
-    def submit(self, filename, data):
+    def submit(self, filename, data, reuse=False):
         if not isinstance(filename, str) or len(filename) > 200 or any(c in filename for c in ('/', '\\', '\x00')):
             raise ValueError("Некорректное имя файла.")
         suffix = Path(filename).suffix.lower()
@@ -89,6 +92,18 @@ class Store:
         if not data or len(data) > MAX_FILE:
             raise ValueError("Файл пуст или превышает 8 МБ.")
         with self.lock:
+            if reuse and self.execute is run_document and environment().get("KIKER_PROVIDER", "gemini") == "gemini":
+                client = Gemini()
+                settings = {"thinking_level": client.thinking_level,
+                            "request_interval": client.request_interval, "timeout": client.timeout}
+                digest = hashlib.sha256(data).hexdigest()
+                for previous in self.list():
+                    if previous["status"] != "complete" or previous.get("sha256") != digest or previous["imported"]:
+                        continue
+                    entry = self.get(previous["id"])
+                    run = entry["result"]["run"]
+                    if run["version"] == self.code_version and run["model"] == client.model and run.get("settings") == settings:
+                        return {**previous, "reused": True}
             if sum(item["status"] in {"queued", "running"} for item in self.list()) >= 3:
                 raise Conflict("Уже выполняются или ожидают три проверки. Дождитесь результата.")
             directory, entry = self._create(filename, "queued")
@@ -116,6 +131,8 @@ class Store:
         try:
             progress("Читаем требования")
             audit, run = self.execute(document, progress=progress)
+            if self.execute is run_document:
+                run = replace(run, version=self.code_version)
             self._complete(directory, snapshot(document, audit, run))
         except (OSError, ValueError, ModelError) as error:
             with self.lock:
@@ -250,7 +267,9 @@ class Handler(BaseHTTPRequestHandler):
                 encoded = payload.get("data")
                 if not isinstance(encoded, str):
                     raise ValueError("Не выбран документ.")
-                result = self.server.store.submit(payload.get("name"), base64.b64decode(encoded, validate=True))
+                if type(payload.get("reuse", False)) is not bool:
+                    raise ValueError("Некорректный выбор повторной проверки.")
+                result = self.server.store.submit(payload.get("name"), base64.b64decode(encoded, validate=True), payload.get("reuse", False))
                 return self._send(result, 202)
             if path == "/api/import":
                 return self._send(self.server.store.import_result(payload), 201)

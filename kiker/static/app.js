@@ -242,8 +242,9 @@ $("upload-form").onsubmit = async event => {
   $("submit-review").disabled = true;
   try {
     const file = state.file || new File([text], "requirements.md", {type: "text/markdown"});
-    const entry = await api("/api/runs", {name: file.name, data: await toBase64(file)});
+    const entry = await api("/api/runs", {name: file.name, data: await toBase64(file), reuse: $("reuse-result").checked});
     await load(entry.id);
+    if (entry.reused) $("save-status").textContent = "Открыт готовый отчёт: документ, версия агента и настройки совпадают. Новый запрос к модели не выполнялся.";
   } catch (error) { notice(error.message); }
   finally { $("submit-review").disabled = false; }
 };
