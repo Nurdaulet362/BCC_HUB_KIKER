@@ -1,5 +1,5 @@
 {
-  "code_revision": "5d7749c4e6499b85ce9a2a93f3b56aa2fe8a51d6",
+  "code_revision": "ee8f220044d7e72f76a88f477d288b1c512ed78f",
   "model": "gemini-3.1-flash-lite",
   "thinking_level": "LOW",
   "temperature": 0,
@@ -10,9 +10,10 @@
   "official_source_revision": "928c1aa364265426105b69ba7a3444eac11b22db",
   "baseline_revision": "287319302afc601ecd5f24b1d4358049891d9747",
   "video_seconds": 95.67766666666667,
-  "generated_at": "2026-11-26T18:08:00+05:00",
+  "generated_at": "2026-11-26T18:37:39+05:00",
   "analysis_revision": "e1baa9da76c3ba4be4460c7033440425a8a880c6",
   "ui_revision": "5d7749c4e6499b85ce9a2a93f3b56aa2fe8a51d6",
+  "documentation_revision": "ee8f220044d7e72f76a88f477d288b1c512ed78f",
   "files": {
     "DEMO.md": {
       "bytes": 7274,
@@ -31,8 +32,8 @@
       "sha256": "bfe01237a3bca48d5c8215f10c8d78a71def5704e587ac5a0d3e677528ac8f12"
     },
     "README.md": {
-      "bytes": 5674,
-      "sha256": "2c37b932fa49643f82d0df31b418953a3fcef81ef59daf2ba8a1beb99df2ed01"
+      "bytes": 7432,
+      "sha256": "345fee01a92c51745e9b32823f21162d4aef25f7857eafe106cb3d1444fc13ff"
     },
     "UI.md": {
       "bytes": 3198,
@@ -41,6 +42,10 @@
     "demo.mp4": {
       "bytes": 2924563,
       "sha256": "d881d1bd19aa71056f4d03f0e62c9200a119d3c6b858ee03da07c6ddacfa18ff"
+    },
+    "kiker-mark.svg": {
+      "bytes": 286,
+      "sha256": "c2e50685fb77e2a306b3cd0986845e177798c7e53584aa97433fb0eedadfe6b7"
     },
     "pilot-observations.csv": {
       "bytes": 348,
@@ -67,8 +72,8 @@
       "sha256": "28c4e9756e71b1f30105e1935db58c84583c1312519affa837068a8d980239c9"
     },
     "validation/README.md": {
-      "bytes": 1820,
-      "sha256": "21cf8330ccd64561991885209e7b7ee1d1ea91382868cf43233f96437e9cda2e"
+      "bytes": 2018,
+      "sha256": "7be36b07cb6e54b02993113f2378478c99349dcc731c734b5a5aeaf749cd697b"
     },
     "validation/dark-ui/browser/01-upload.png": {
       "bytes": 71258,
@@ -925,6 +930,10 @@
     "validation/history-d23a93d/unit-tests.log": {
       "bytes": 3825,
       "sha256": "eb21b5d38119dc892ae502c8ba0ba63763342d8a3c0f234ceadca837563fb9f8"
+    },
+    "validation/readme-update/checks.json": {
+      "bytes": 549,
+      "sha256": "72b40ec06e3b1399543bc711c6b57565e5f6c8bdb5942d2e3efb990a7494a5ca"
     },
     "validation/release-121/baseline-comparability.json": {
       "bytes": 567,
