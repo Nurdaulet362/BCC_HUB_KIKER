@@ -1,0 +1,4 @@
+interface:
+  display_name: "Хакатон: опыт KIKER"
+  short_description: "Перенос уроков KIKER в новые AI-хакатоны"
+  default_prompt: "Используй $hackathon-lessons: изучи бриф этого хакатона и примени подходящие уроки KIKER к плану, проверкам и сдаче."
