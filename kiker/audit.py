@@ -53,6 +53,12 @@ CONTROL = re.compile(r"\b(?:кнопк\w*|button)\b", re.I)
 ENVIRONMENT = re.compile(r"\b(?:prod\w*|продакш\w*|промышлен\w*|сред\w*)\b", re.I)
 ADDRESS = re.compile(r"\b(?:url|адрес\w*|домен\w*)\b", re.I)
 ADDRESS_METADATA = re.compile(r"^\|\s*\*{0,2}(?:request url|url type|swagger)\*{0,2}\s*\|", re.I)
+API_DETAIL = re.compile(r"\b(?:api|апи|rest|http|json|graphql|grpc|soap)\b", re.I)
+INTERFACE_CONTEXT = re.compile(
+    r"\b(?:api|апи|rest|https?|json|xml|graphql|grpc|soap|protobuf|url|endpoint|"
+    r"get|post|put|patch|delete|эндпоинт\w*)\b|программн\w*\s+интерфейс|веб[- ]сервис",
+    re.I,
+)
 CONTROL_STATE = re.compile(
     r"\b(?:активн\w*|неактивн\w*|отключ\w*|блокир\w*|заблокир\w*|"
     r"enable[ds]?|disable[ds]?|active|inactive)\b",
@@ -463,10 +469,18 @@ def _confirm_findings(
     return tuple(confirmed), rejected
 
 
-def _grounded_design_detail(finding: Finding, source: dict[str, Block]) -> bool:
+def _grounded_design_detail(finding: Finding, source: dict[str, Block], title: str = "") -> bool:
     if finding.kind not in {"ambiguous", "gap", "unverifiable"}:
         return True
     evidence = [source[ref].text for ref in finding.sources]
+    # A screen or a file export does not, by itself, require a network API.
+    # Keep conflicts: a valid behavioural contradiction must not disappear just
+    # because the model unnecessarily describes it with API terminology.
+    if API_DETAIL.search(finding.description + " " + finding.question) and not any(
+        INTERFACE_CONTEXT.search(text) for text in
+        [title, *(block.section + " " + block.text for block in source.values())]
+    ):
+        return False
     if ENVIRONMENT.search(finding.question) and ADDRESS.search(finding.question):
         if all(ADDRESS_METADATA.match(line) for line in evidence):
             return False
@@ -650,7 +664,7 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
     for item in sorted(findings, key=lambda finding: (rank[finding.severity], finding.sources)):
         mentioned = set(re.findall(r"\bS\d{3,}\b", item.description + " " + item.question))
         referenced = set(item.sources) | (mentioned & source.keys())
-        if any(referenced == set(pair) for pair in checked_periods) or not _grounded_design_detail(item, source):
+        if any(referenced == set(pair) for pair in checked_periods) or not _grounded_design_detail(item, source, document.title):
             continue
         if not _matches_acceptance_rule(item, source):
             unique.setdefault((item.kind, item.sources), item)
@@ -664,7 +678,7 @@ def review(document: Document, reviewer: Reviewer, progress: Callable[[str], Non
         [*verified_periods, *(finding for finding in confirmed
                              if finding.sources not in checked_periods
                              and not _matches_acceptance_rule(finding, source)
-                             and _grounded_design_detail(finding, source))],
+                             and _grounded_design_detail(finding, source, document.title))],
         key=lambda finding: (rank[finding.severity], finding.sources),
     )
     return Audit(

@@ -151,6 +151,27 @@ class KikerTests(unittest.TestCase):
                            ('S001', 'S002'), 'Полнота')
         self.assertTrue(_grounded_design_detail(required, source))
 
+    def test_api_gap_requires_an_explicit_interface_in_the_document(self):
+        document = read_document(source_file(self.directory,
+            '# Выгрузка\n\nREQ-1. Экран принимает две календарные даты.\n'))
+        source = {block.id: block for block in document.blocks}
+        invented = Finding('gap', 'major', 'Не определён формат даты для API.',
+                           'В каком формате API принимает дату?', ('S001',), 'Отдельное требование')
+        self.assertFalse(_grounded_design_detail(invented, source, document.title))
+        # An explicit contract in the title or another section remains in scope.
+        self.assertTrue(_grounded_design_detail(invented, source, 'REST API выгрузки'))
+        document = read_document(source_file(self.directory,
+            '# Выгрузка\n\nREQ-1. Экран принимает две календарные даты.\n\n'
+            'REQ-2. Клиент передаёт даты серверу в JSON.\n'))
+        self.assertTrue(_grounded_design_detail(invented, {b.id: b for b in document.blocks}))
+        # Preserve genuine behavioural questions and conflicts on the same screen.
+        behavioural = Finding('gap', 'major', 'Нет правила порядка дат.',
+                             'Как сравнивать даты?', ('S001',), 'Отдельное требование')
+        self.assertTrue(_grounded_design_detail(behavioural, source))
+        conflict = Finding('conflict', 'major', 'API обязан вернуть два разных результата.',
+                           'Какой результат?', ('S001',), 'Проверка набора')
+        self.assertTrue(_grounded_design_detail(conflict, source))
+
     def test_blank_pdf_needs_text_layer(self):
         file = pdf_file(self.directory / "blank.pdf")
         with self.assertRaisesRegex(DocumentError, "извлекаемого текста"):

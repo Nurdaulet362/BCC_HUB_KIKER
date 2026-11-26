@@ -36,7 +36,7 @@ class Gemini:
             raise ModelError("Проверьте модель Gemini в KIKER_MODEL.")
         try:
             self.timeout = float(values.get("KIKER_TIMEOUT", "90"))
-            self.request_interval = float(values.get("KIKER_REQUEST_INTERVAL", "15"))
+            self.request_interval = float(values.get("KIKER_REQUEST_INTERVAL", "8"))
         except ValueError as error:
             raise ModelError("Проверьте KIKER_TIMEOUT и KIKER_REQUEST_INTERVAL в конфигурации.") from error
         if not 1 <= self.timeout <= 1800:

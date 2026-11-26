@@ -119,7 +119,7 @@ function renderReview() {
   $("metric-critical").textContent = result.findings.filter(f => f.severity === "critical").length;
   $("metric-requirements").textContent = result.requirements.length;
   $("metric-reviewed").textContent = `${result.findings.filter(f => decisionFor(f.id).decision !== "pending").length} / ${result.findings.length}`;
-  $("review-limitations").textContent = (result.rejected ? `${result.rejected} записей модели не прошли проверку. ` : "") +
+  $("review-limitations").textContent = (result.rejected ? `Записей модели, не прошедших проверку: ${result.rejected}. ` : "") +
     (result.document.empty_pages?.length ? "В PDF есть страницы без извлечённого текста. " : "") +
     "Проверьте смысл замечаний по цитатам. Решения аналитика сохраняются отдельно от исходного отчёта.";
   const base = "/api/runs/" + entry.id;
