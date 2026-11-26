@@ -5,6 +5,7 @@ const state = {token: "", history: [], entry: null, selected: null, file: null, 
 const decisions = {pending: "Без решения", accepted: "Подтверждено", rejected: "Отклонено", clarify: "На уточнении"};
 const kinds = {conflict: "Противоречие", ambiguous: "Двусмысленность", gap: "Неполнота", unverifiable: "Непроверяемость", compound: "Смешение требований", prescriptive: "Проектное ограничение"};
 const severity = {critical: "Блокирует", major: "Существенно", minor: "Уточнить"};
+const narrowScreen = window.matchMedia("(max-width: 700px)");
 const sample = `# Учёт расходов по карте
 
 REQ-1. Месяц определяется по дате совершения покупки в Алматы. В расходы входят проведённые покупки. Переводы исключаются.
@@ -24,6 +25,27 @@ function el(tag, text, className) {
   return node;
 }
 function notice(message) { $("notice").textContent = message; $("notice").hidden = !message; }
+function syncSidebar() {
+  const open = narrowScreen.matches ? $("shell").classList.contains("sidebar-open") : !$("shell").classList.contains("sidebar-collapsed");
+  $("open-sidebar").setAttribute("aria-expanded", String(open));
+  $("sidebar-backdrop").hidden = !narrowScreen.matches || !open;
+  $("main").inert = narrowScreen.matches && open;
+}
+function setSidebar(open, restoreFocus = true) {
+  if (narrowScreen.matches) $("shell").classList.toggle("sidebar-open", open);
+  else {
+    $("shell").classList.toggle("sidebar-collapsed", !open);
+    localStorage.setItem("kiker.sidebarCollapsed", String(!open));
+  }
+  syncSidebar();
+  if (restoreFocus) $(open ? "close-sidebar" : "open-sidebar").focus();
+}
+function resizeInput() {
+  const input = $("document-text");
+  input.style.height = "auto";
+  input.style.height = Math.min(input.scrollHeight, 280) + "px";
+  $("clear-input").hidden = !input.value && !state.file;
+}
 async function api(path, payload) {
   const response = await fetch(path, payload === undefined ? {} : {
     method: "POST", headers: {"Content-Type": "application/json", "X-Kiker-Token": state.token}, body: JSON.stringify(payload)
@@ -36,6 +58,14 @@ function show(view, breadcrumb) {
   state.view = view;
   for (const name of ["upload", "progress", "review", "compare"]) $(name + "-view").hidden = name !== view;
   $("breadcrumb").textContent = breadcrumb;
+  $("mode-review").toggleAttribute("aria-current", view !== "compare");
+  $("mode-compare").toggleAttribute("aria-current", view === "compare");
+  $(view === "compare" ? "mode-compare" : "mode-review").setAttribute("aria-current", "page");
+  if (narrowScreen.matches && $("shell").classList.contains("sidebar-open")) {
+    setSidebar(false, false);
+    $("main").focus();
+  }
+  if (view === "upload") resizeInput();
   if (view !== "progress") clearTimeout(state.poll);
 }
 function formatDate(value) {
@@ -53,10 +83,12 @@ function setFile(file) {
   }
   state.file = file;
   $("file-label").textContent = file.name;
+  $("selected-file").hidden = false;
   $("document-text").value = "";
+  resizeInput();
   notice("");
 }
-function clearFile() { state.file = null; $("document-file").value = ""; $("file-label").textContent = "Выберите файл или перетащите сюда"; }
+function clearFile() { state.file = null; $("document-file").value = ""; $("file-label").textContent = ""; $("selected-file").hidden = true; }
 async function toBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -73,6 +105,7 @@ async function history() {
   for (const entry of state.history) {
     const button = el("button", undefined, "history-item" + (state.entry?.id === entry.id ? " active" : ""));
     button.type = "button";
+    if (state.entry?.id === entry.id) button.setAttribute("aria-current", "true");
     button.append(el("strong", entry.title), el("small", formatDate(entry.created_at) + " · " + (
       entry.status === "complete" ? findingCount(entry.findings) : entry.status === "error" ? "Ошибка запуска" : "Выполняется"
     )));
@@ -203,8 +236,9 @@ async function openCompare() {
       const option = el("option", `${entry.name} · ${formatDate(entry.created_at)} · ${findingCount(entry.findings)}`); option.value = entry.id; $(name).append(option);
     }
   }
-  $("compare-after").value = state.entry.id;
-  $("compare-before").value = completed.find(item => item.id !== state.entry.id).id;
+  const current = completed.find(item => item.id === state.entry?.id) || completed[0];
+  $("compare-after").value = current.id;
+  $("compare-before").value = completed.find(item => item.id !== current.id).id;
   $("comparison-result").replaceChildren();
   show("compare", "Сравнение версий"); notice("");
 }
@@ -231,14 +265,42 @@ function renderComparison(data) {
   root.append(columns);
 }
 
-$("new-review").onclick = $("back-from-progress").onclick = () => { ++state.selection; show("upload", "Новая проверка"); notice(""); };
+function newReview() { ++state.selection; show("upload", "Новая проверка"); notice(""); $("document-text").focus(); }
+$("new-review").onclick = $("back-from-progress").onclick = newReview;
+$("mode-review").onclick = () => {
+  if (state.view !== "compare") return;
+  if (state.entry?.status === "complete") { show("review", "Результат проверки"); renderReview(); }
+  else newReview();
+};
+$("mode-compare").onclick = () => openCompare().catch(error => notice(error.message));
+$("open-sidebar").onclick = () => setSidebar(true);
+$("close-sidebar").onclick = $("sidebar-backdrop").onclick = () => setSidebar(false);
+if (localStorage.getItem("kiker.sidebarCollapsed") === "true") $("shell").classList.add("sidebar-collapsed");
+syncSidebar();
+narrowScreen.addEventListener("change", () => {
+  const wasOpen = $("shell").classList.contains("sidebar-open");
+  $("shell").classList.remove("sidebar-open"); syncSidebar();
+  if (wasOpen || $("sidebar").contains(document.activeElement)) $("main").focus();
+  if (state.view === "upload") resizeInput();
+});
+document.addEventListener("keydown", event => {
+  if (!narrowScreen.matches || !$("shell").classList.contains("sidebar-open")) return;
+  if (event.key === "Escape") { event.preventDefault(); setSidebar(false); }
+  if (event.key === "Tab") {
+    const items = [...$("sidebar").querySelectorAll("a[href], button:not(:disabled)")];
+    const first = items[0], last = items.at(-1);
+    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  }
+});
 $("document-file").onchange = event => setFile(event.target.files[0]);
-$("document-text").oninput = clearFile;
-$("clear-input").onclick = () => { clearFile(); $("document-text").value = ""; };
-$("load-sample").onclick = () => { clearFile(); $("document-text").value = sample; $("document-text").focus(); };
-$("drop-zone").onkeydown = event => { if (["Enter", " "].includes(event.key)) { event.preventDefault(); $("document-file").click(); } };
-for (const name of ["dragenter", "dragover"]) $("drop-zone").addEventListener(name, event => { event.preventDefault(); $("drop-zone").classList.add("dragging"); });
-for (const name of ["dragleave", "drop"]) $("drop-zone").addEventListener(name, event => { event.preventDefault(); $("drop-zone").classList.remove("dragging"); if (name === "drop") setFile(event.dataTransfer.files[0]); });
+$("document-text").oninput = () => { clearFile(); resizeInput(); notice(""); };
+$("remove-file").onclick = () => { clearFile(); resizeInput(); $("document-text").focus(); };
+$("clear-input").onclick = () => { clearFile(); $("document-text").value = ""; resizeInput(); notice(""); $("document-text").focus(); };
+$("load-sample").onclick = () => { clearFile(); $("document-text").value = sample; resizeInput(); notice(""); $("document-text").focus(); };
+$("drop-zone").onclick = () => $("document-file").click();
+for (const name of ["dragenter", "dragover"]) $("upload-form").addEventListener(name, event => { event.preventDefault(); $("upload-form").classList.add("dragging"); });
+for (const name of ["dragleave", "drop"]) $("upload-form").addEventListener(name, event => { event.preventDefault(); $("upload-form").classList.remove("dragging"); if (name === "drop") setFile(event.dataTransfer.files[0]); });
 $("upload-form").onsubmit = async event => {
   event.preventDefault(); notice("");
   const text = $("document-text").value.trim();
@@ -252,7 +314,10 @@ $("upload-form").onsubmit = async event => {
   } catch (error) { notice(error.message); }
   finally { $("submit-review").disabled = false; }
 };
-$("import-button").onclick = () => $("import-file").click();
+$("import-button").onclick = () => {
+  if (narrowScreen.matches) setSidebar(false);
+  $("import-file").click();
+};
 $("import-file").onchange = async event => {
   const file = event.target.files[0]; if (!file) return;
   try {
@@ -264,7 +329,7 @@ $("import-file").onchange = async event => {
 };
 $("finding-filter").onchange = renderFindings;
 $("open-compare").onclick = () => openCompare().catch(error => notice(error.message));
-$("back-to-review").onclick = () => { show("review", "Результат проверки"); renderReview(); };
+$("back-to-review").onclick = () => { if (state.entry?.status === "complete") { show("review", "Результат проверки"); renderReview(); } else newReview(); };
 $("compare-form").onsubmit = async event => {
   event.preventDefault(); notice("");
   const before = $("compare-before").value, after = $("compare-after").value;
